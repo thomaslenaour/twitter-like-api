@@ -10,10 +10,16 @@ CREATE TABLE "User" (
     "description" TEXT,
     "birthDate" TIMESTAMP(3) NOT NULL,
     "phoneNumber" TEXT,
-    "pictureUrl" TEXT,
+    "avatarUrl" TEXT,
     "bannerUrl" TEXT,
     "websiteUrl" TEXT,
     "location" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_pseudo_key" ON "User"("pseudo");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
