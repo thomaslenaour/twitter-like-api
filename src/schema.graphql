@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateTweetInput {
+  authorId: String!
+  content: String!
+  parentResponseId: String
+  parentTweetId: String
+  tweetType: TweetType!
+}
+
 input CreateUserInput {
   birthDate: DateTime!
   email: String!
@@ -16,11 +24,34 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Mutation {
+  createTweet(data: CreateTweetInput!): String!
   createUser(data: CreateUserInput!): User!
 }
 
 type Query {
   user(userId: String!): User!
+}
+
+type Tweet {
+  author: User!
+  authorId: String!
+  content: String!
+  createdAt: DateTime!
+  id: String!
+  parentResponseTweet: Tweet
+  parentTweet: Tweet
+  responseTweet: Tweet
+  responsesTweet: [Tweet!]!
+  type: TweetType!
+  updatedAt: DateTime!
+}
+
+enum TweetType {
+  """A fresh post"""
+  PARENT
+
+  """A response to a post or a response to a response"""
+  RESPONSE
 }
 
 type User {

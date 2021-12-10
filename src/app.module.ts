@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import config from '../config/config';
+import { TweetModule } from './business/tweet/tweet.module';
 import { UserModule } from './business/user/user.module';
 
 import { PrismaModule } from './technical/prisma/prisma.module';
@@ -24,6 +25,7 @@ import { PrismaModule } from './technical/prisma/prisma.module';
     }),
     PrismaModule,
     UserModule,
+    TweetModule,
   ],
 })
 export class AppModule {}

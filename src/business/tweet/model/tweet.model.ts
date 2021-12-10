@@ -1,0 +1,48 @@
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { User } from 'src/business/user/model/user.model';
+
+import { GenericProperties } from 'src/technical/model/generic-properties';
+
+@ObjectType()
+export class Tweet extends GenericProperties {
+  @Field()
+  content: string;
+
+  @Field(() => User)
+  author: User;
+
+  @Field()
+  authorId: string;
+
+  @Field(() => TweetType)
+  type: TweetType;
+
+  @Field(() => Tweet, { nullable: true })
+  parentTweet?: Tweet;
+
+  @Field(() => [Tweet])
+  responsesTweet: Array<Tweet>;
+
+  @Field(() => Tweet, { nullable: true })
+  parentResponseTweet?: Tweet;
+
+  @Field(() => Tweet, { nullable: true })
+  responseTweet?: Tweet;
+}
+
+export enum TweetType {
+  PARENT = 'PARENT',
+  RESPONSE = 'RESPONSE',
+}
+
+registerEnumType(TweetType, {
+  name: 'TweetType',
+  valuesMap: {
+    PARENT: {
+      description: 'A fresh post',
+    },
+    RESPONSE: {
+      description: 'A response to a post or a response to a response',
+    },
+  },
+});
