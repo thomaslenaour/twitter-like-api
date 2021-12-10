@@ -25,4 +25,26 @@ model User {
   bannerUrl   String?
   websiteUrl  String?
   location    String?
+  tweets      Tweet[]
+}
+
+model Tweet {
+  id                  String    @id @default(cuid())
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  content             String    @db.VarChar(280)
+  author              User      @relation(fields: [authorId], references: [id])
+  authorId            String
+  type                TweetType @default(PARENT)
+  parentTweetId       String?
+  parentTweet         Tweet?    @relation("ParentTweetResponsesTweet", fields: [parentTweetId], references: [id])
+  responsesTweet      Tweet[]   @relation("ParentTweetResponsesTweet")
+  parentResponseId    String?   @unique
+  parentResponseTweet Tweet?    @relation("ResponseToResponse", fields: [parentResponseId], references: [id])
+  responseTweet       Tweet?    @relation("ResponseToResponse")
+}
+
+enum TweetType {
+  PARENT
+  RESPONSE
 }
