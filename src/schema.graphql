@@ -7,7 +7,7 @@ input CreateTweetInput {
   content: String!
   parentResponseId: String
   parentTweetId: String
-  tweetType: TweetType!
+  type: TweetType!
 }
 
 input CreateUserInput {

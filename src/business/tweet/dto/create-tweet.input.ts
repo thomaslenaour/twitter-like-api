@@ -1,10 +1,19 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { Tweet, TweetType } from '../model/tweet.model';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+import { TweetType } from '../model/tweet.model';
 
 @InputType()
 export class CreateTweetInput {
   @IsString()
+  @MaxLength(280, {
+    message: 'Content of tweet is too long',
+  })
   @IsNotEmpty()
   @Field()
   content: string;
@@ -17,7 +26,7 @@ export class CreateTweetInput {
   @IsNotEmpty()
   @IsEnum(TweetType)
   @Field(() => TweetType)
-  tweetType: TweetType;
+  type: TweetType;
 
   @IsOptional()
   @Field({ nullable: true })
