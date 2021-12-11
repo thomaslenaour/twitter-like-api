@@ -3,17 +3,17 @@ import { Resolver, Mutation, Query, Args } from '@nestjs/graphql';
 
 import { CreateUserInput } from './dto/create-user.input';
 
-import { User } from './model/user.model';
+import { User } from './models/user.model';
 
 import { UserService } from './user.service';
 
 @Resolver(() => User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(private userService: UserService) {}
 
   @Query(() => User)
   async user(@Args('userId') userId: string) {
-    const user = await this.userService.getUser(userId);
+    const user = await this.userService.getUser('id', userId);
 
     if (!user) {
       throw new HttpException(
@@ -28,7 +28,7 @@ export class UserResolver {
   @Mutation(() => User)
   async createUser(@Args('data') data: CreateUserInput) {
     try {
-      return await this.userService.createUser(data);
+      await this.userService.createUser(data);
     } catch (err) {
       throw new HttpException(
         err?.message || 'Unknow error',

@@ -3,9 +3,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import config from '../config/config';
+
 import { TweetModule } from './business/tweet/tweet.module';
 import { UserModule } from './business/user/user.module';
-
+import { AuthModule } from './technical/auth/auth.module';
 import { PrismaModule } from './technical/prisma/prisma.module';
 
 @Module({
@@ -24,6 +25,7 @@ import { PrismaModule } from './technical/prisma/prisma.module';
       inject: [ConfigService],
     }),
     PrismaModule,
+    AuthModule,
     UserModule,
     TweetModule,
   ],

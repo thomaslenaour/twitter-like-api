@@ -12,4 +12,12 @@ export default (): Config => ({
     introspection: true,
     autoSchemaFile: './src/schema.graphql',
   },
+  auth: {
+    jwt: {
+      secret: process.env.JWT_SECRET_KEY,
+      signOptions: {
+        expiresIn: '3600s',
+      },
+    },
+  },
 });

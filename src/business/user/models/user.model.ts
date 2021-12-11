@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { GenericProperties } from 'src/technical/model/generic-properties';
+import { GenericProperties } from 'src/technical/models/generic-properties';
 
 @ObjectType()
 export class User extends GenericProperties {

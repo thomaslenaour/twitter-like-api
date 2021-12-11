@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 
 import { CreateUserInput } from './dto/create-user.input';
+import { GetUserWhereInput } from './dto/get-user.input';
 
 import { UserRepository } from './user.repository';
 
@@ -8,14 +10,16 @@ import { UserRepository } from './user.repository';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async getUser(userId: string) {
-    return this.userRepository.getUser(userId);
+  async getUser(where: GetUserWhereInput, value: string) {
+    return this.userRepository.getUser(where, value);
   }
 
   async createUser(data: CreateUserInput) {
     if (this.getAge(data.birthDate) < 15) {
-      throw new Error('Vous devez avoir 15 ans');
+      throw new Error('You must have 15 years to register.');
     }
+
+    data.password = await bcrypt.hash(data.password, 10);
 
     return this.userRepository.createUser(data);
   }
