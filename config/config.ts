@@ -1,3 +1,4 @@
+import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { Config } from './config.interface';
 
 export default (): Config => ({
@@ -11,6 +12,17 @@ export default (): Config => ({
     },
     introspection: true,
     autoSchemaFile: './src/schema.graphql',
+    formatError: (error: GraphQLError) => {
+      console.dir(error);
+      const graphQLFormattedError: GraphQLFormattedError = {
+        message:
+          error.extensions.exception?.response?.message ||
+          error?.message ||
+          'Unknow error',
+        extensions: error.extensions,
+      };
+      return graphQLFormattedError;
+    },
   },
   auth: {
     jwt: {
