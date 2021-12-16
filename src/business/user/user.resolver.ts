@@ -2,6 +2,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { Resolver, Mutation, Query, Args } from '@nestjs/graphql';
 
 import { CreateUserInput } from './dto/create-user.input';
+import { UpdateUserInput } from './dto/update-user.input';
 
 import { User } from './models/user.model';
 
@@ -28,7 +29,19 @@ export class UserResolver {
   @Mutation(() => User)
   async createUser(@Args('data') data: CreateUserInput) {
     try {
-      await this.userService.createUser(data);
+      return await this.userService.createUser(data);
+    } catch (err) {
+      throw new HttpException(
+        err?.message || 'Unknow error',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Mutation(() => User)
+  async updateUser(@Args('data') data: UpdateUserInput) {
+    try {
+      return await this.userService.updateUser(data);
     } catch (err) {
       throw new HttpException(
         err?.message || 'Unknow error',

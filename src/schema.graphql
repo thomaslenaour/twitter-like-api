@@ -26,6 +26,7 @@ scalar DateTime
 type Mutation {
   createTweet(data: CreateTweetInput!): String!
   createUser(data: CreateUserInput!): User!
+  updateUser(data: UpdateUserInput!): User!
 }
 
 type Query {
@@ -52,6 +53,16 @@ enum TweetType {
 
   """A response to a post or a response to a response"""
   RESPONSE
+}
+
+input UpdateUserInput {
+  email: String
+  location: String
+  name: String
+  phoneNumber: String
+  pseudo: String
+  userId: String!
+  websiteUrl: String
 }
 
 type User {

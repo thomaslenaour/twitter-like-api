@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { CreateUserInput } from './dto/create-user.input';
+import { UpdateUserInput } from './dto/update-user.input';
 import { GetUserWhere } from './types/get-user.types';
 
 import { UserRepository } from './user.repository';
@@ -24,5 +25,11 @@ export class UserService {
     data.password = await bcrypt.hash(data.password, 10);
 
     return this.userRepository.createUser(data);
+  }
+
+  async updateUser(data: UpdateUserInput) {
+    const { userId, ...newData } = data;
+
+    return this.userRepository.updateUser(userId, newData);
   }
 }
