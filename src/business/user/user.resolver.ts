@@ -1,10 +1,12 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Query, Args } from '@nestjs/graphql';
+import { GqlAuthGuard } from 'src/technical/auth/guards/gql-auth.guard';
 
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 
 import { User } from './models/user.model';
+import { CurrentUser } from './user.decorator';
 
 import { UserService } from './user.service';
 
@@ -12,18 +14,24 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private userService: UserService) {}
 
-  @Query(() => User)
-  async user(@Args('userId') userId: string) {
-    const user = await this.userService.getUser('id', userId);
+  // @Query(() => User)
+  // async user(@Args('userId') userId: string) {
+  //   const user = await this.userService.getUser('id', userId);
 
-    if (!user) {
-      throw new HttpException(
-        'No user found with the provided ID.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  //   if (!user) {
+  //     throw new HttpException(
+  //       'No user found with the provided ID.',
+  //       HttpStatus.BAD_REQUEST,
+  //     );
+  //   }
 
-    return user;
+  //   return user;
+  // }
+
+  @UseGuards(GqlAuthGuard)
+  @Query(() => Boolean)
+  async lol(@CurrentUser() user: User) {
+    return true;
   }
 
   @Mutation(() => User)

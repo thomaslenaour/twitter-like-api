@@ -23,27 +23,57 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input LoginInput {
+  emailOrPseudo: String!
+  password: String!
+}
+
 type Mutation {
   createTweet(data: CreateTweetInput!): String!
   createUser(data: CreateUserInput!): User!
+  login(data: LoginInput!): Token!
+  refreshToken(token: String!): Token!
+  signup(data: SignupInput!): Token!
   updateUser(data: UpdateUserInput!): User!
 }
 
 type Query {
-  user(userId: String!): User!
+  lol: Boolean!
+}
+
+input SignupInput {
+  birthDate: DateTime!
+  email: String!
+  name: String!
+  password: String!
+  pseudo: String!
+}
+
+type Token {
+  """Identifies the JWT access token."""
+  accessToken: String!
+
+  """Identifies the JWT refresh token."""
+  refreshToken: String
 }
 
 type Tweet {
   author: User!
   authorId: String!
   content: String!
+
+  """Identifies the date and time when the object was created."""
   createdAt: DateTime!
+
+  """Identifies the ID of the object (always unique)."""
   id: String!
   parentResponseTweet: Tweet
   parentTweet: Tweet
   responseTweet: Tweet
   responsesTweet: [Tweet!]!
   type: TweetType!
+
+  """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
 }
 
@@ -69,14 +99,20 @@ type User {
   avatarUrl: String
   bannerUrl: String
   birthDate: DateTime!
+
+  """Identifies the date and time when the object was created."""
   createdAt: DateTime!
   description: String
   email: String!
+
+  """Identifies the ID of the object (always unique)."""
   id: String!
   location: String
   name: String!
   phoneNumber: String
   pseudo: String!
+
+  """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
   websiteUrl: String
 }

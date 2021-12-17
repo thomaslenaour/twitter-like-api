@@ -13,9 +13,9 @@ import { getAge } from './utils/user.utils';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async getUser(where: GetUserWhere, value: string) {
-    return this.userRepository.getUser(where, value);
-  }
+  // async getUser(where: GetUserWhere, value: string) {
+  //   return this.userRepository.getUser(where, value);
+  // }
 
   async createUser(data: CreateUserInput) {
     if (getAge(data.birthDate) < 15) {

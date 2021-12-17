@@ -1,10 +1,10 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { User } from 'src/business/user/models/user.model';
 
-import { GenericProperties } from 'src/technical/models/generic-properties';
+import { BaseModel } from 'src/technical/models/base-model';
 
 @ObjectType()
-export class Tweet extends GenericProperties {
+export class Tweet extends BaseModel {
   @Field()
   content: string;
 

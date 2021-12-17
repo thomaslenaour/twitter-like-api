@@ -7,12 +7,19 @@ export interface Config {
 }
 
 export interface AuthConfig {
+  bcrypt: BcryptConfig;
   jwt: JwtConfig;
 }
 
+export interface BcryptConfig {
+  bcryptSaltOrRound: string | number;
+}
+
 export interface JwtConfig {
-  secret: string;
+  accessTokenSecret: string;
+  refreshTokenSecret: string;
   signOptions: {
     expiresIn: string;
+    refreshIn: string;
   };
 }

@@ -25,10 +25,15 @@ export default (): Config => ({
     },
   },
   auth: {
+    bcrypt: {
+      bcryptSaltOrRound: 10,
+    },
     jwt: {
-      secret: process.env.JWT_SECRET_KEY,
+      accessTokenSecret: process.env.JWT_ACCESS_TOKEN_SECRET,
+      refreshTokenSecret: process.env.JWT_REFRESH_TOKEN_SECRET,
       signOptions: {
-        expiresIn: '3600s',
+        expiresIn: '5m',
+        refreshIn: '5d',
       },
     },
   },

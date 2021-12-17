@@ -8,18 +8,15 @@ import { PrismaService } from 'src/technical/prisma/prisma.service';
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUser(where: keyof Prisma.UserWhereUniqueInput, value: string) {
-    return this.prisma.user.findUnique({ where: { [where]: value } });
-  }
-
   async createUser(data: Prisma.UserCreateInput) {
     try {
       return await this.prisma.user.create({ data });
     } catch (err) {
-      if (err instanceof PrismaClientKnownRequestError) {
-        if (err.code === 'P2002') {
-          throw new Error('User already exists with this email or pseudo.');
-        }
+      if (
+        err instanceof PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        throw new Error(`The email or pseudo is already taken.`);
       }
       throw err;
     }

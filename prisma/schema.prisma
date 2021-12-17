@@ -11,21 +11,22 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  name        String
-  pseudo      String   @unique
-  email       String   @unique
-  password    String
-  description String?
-  birthDate   DateTime
-  phoneNumber String?
-  avatarUrl   String?
-  bannerUrl   String?
-  websiteUrl  String?
-  location    String?
-  tweets      Tweet[]
+  id            String         @id @default(cuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  name          String
+  pseudo        String         @unique
+  email         String         @unique
+  password      String
+  description   String?
+  birthDate     DateTime
+  phoneNumber   String?
+  avatarUrl     String?
+  bannerUrl     String?
+  websiteUrl    String?
+  location      String?
+  tweets        Tweet[]
+  refreshTokens RefreshToken[]
 }
 
 model Tweet {
@@ -42,6 +43,18 @@ model Tweet {
   parentResponseId    String?   @unique
   parentResponseTweet Tweet?    @relation("ResponseToResponse", fields: [parentResponseId], references: [id])
   responseTweet       Tweet?    @relation("ResponseToResponse")
+}
+
+model RefreshToken {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id])
+  userId         String
+  jti            String   @unique
+  isRevoked      Boolean  @default(false)
+  expirationDate DateTime
+  ipAddress      String
 }
 
 enum TweetType {
