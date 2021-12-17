@@ -29,7 +29,7 @@ input LoginInput {
 }
 
 type Mutation {
-  createTweet(data: CreateTweetInput!): String!
+  createTweet(data: CreateTweetInput!): Tweet!
   createUser(data: CreateUserInput!): User!
   login(data: LoginInput!): Token!
   refreshToken(token: String!): Token!
