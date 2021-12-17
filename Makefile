@@ -1,4 +1,5 @@
 start:
+	npm run prisma:migrate
 	npm run docker:db
 	npm run start:dev
 
