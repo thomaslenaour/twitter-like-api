@@ -19,6 +19,6 @@ export class TweetService {
     }
 
     //Call repository
-    return this.tweetRepository.createUser(createTweetInput);
+    return this.tweetRepository.createTweet(createTweetInput);
   }
 }

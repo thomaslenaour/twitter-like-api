@@ -7,7 +7,7 @@ import { CreateTweetInput } from './dto/create-tweet.input';
 export class TweetRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createUser(data: CreateTweetInput) {
+  async createTweet(data: CreateTweetInput) {
     return this.prisma.tweet.create({ data });
   }
 }
