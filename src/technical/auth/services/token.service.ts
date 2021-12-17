@@ -1,17 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { v4 as uuidv4 } from 'uuid';
-
-import { Token } from '../models/token.model';
 
 import { JwtConfig } from 'config/config.interface';
-import {
-  JwtAccessTokenInput,
-  JwtCreateToken,
-  JwtRefreshTokenInput,
-  JwtRefreshTokenPayload,
-} from '../types/jwt.interface';
+import { JwtCreateToken, JwtRefreshTokenPayload } from '../types/jwt.interface';
 import { TokenRepository } from '../repositories/token.repository';
 
 @Injectable()

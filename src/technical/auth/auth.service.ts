@@ -7,7 +7,7 @@ import { TokenService } from './services/token.service';
 
 import { AuthRepository } from './repositories/auth.repository';
 
-import { JwtAccessTokenInput, JwtCreateToken } from './types/jwt.interface';
+import { JwtCreateToken } from './types/jwt.interface';
 import { SignupInput } from './dto/signup.input';
 
 @Injectable()
