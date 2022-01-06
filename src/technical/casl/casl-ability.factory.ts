@@ -37,13 +37,12 @@ export class CaslAbilityFactory {
       case 'MODERATOR':
 
       case 'USER':
-        can(Action.Read, 'all');
         can(Action.Create, 'Tweet');
         can(Action.Update, 'Tweet', { authorId: user.id });
         can(Action.Delete, 'Tweet', { authorId: user.id });
 
       default:
-        can(Action.Read, 'Tweet');
+        can(Action.Read, 'all');
     }
 
     return build({
