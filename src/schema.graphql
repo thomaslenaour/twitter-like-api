@@ -111,8 +111,15 @@ type User {
   name: String!
   phoneNumber: String
   pseudo: String!
+  role: UserRole!
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
   websiteUrl: String
+}
+
+enum UserRole {
+  ADMIN
+  MODERATOR
+  USER
 }
