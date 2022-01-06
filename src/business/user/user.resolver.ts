@@ -28,9 +28,9 @@ export class UserResolver {
   //   return user;
   // }
 
-  @UseGuards(GqlAuthGuard)
   @Query(() => Boolean)
   async lol(@CurrentUser() user: User) {
+    console.log('user', user);
     return true;
   }
 
