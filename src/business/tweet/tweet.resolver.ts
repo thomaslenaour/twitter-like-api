@@ -9,7 +9,6 @@ import { TweetService } from './tweet.service';
 export class TweetResolver {
   constructor(private readonly tweetService: TweetService) {}
 
-  @UseGuards(GqlAuthGuard)
   @Mutation(() => Tweet)
   async createTweet(@Args('data') data: CreateTweetInput) {
     try {

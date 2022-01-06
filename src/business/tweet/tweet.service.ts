@@ -14,7 +14,17 @@ export class TweetService {
       (createTweetInput.parentTweetId || createTweetInput.parentResponseId)
     ) {
       throw new Error(
-        `A new tweet can't be a response to a tweet or a reponse to another response`,
+        `A new tweet can't be a response to a tweet or a reponse to another response.`,
+      );
+    }
+
+    if (
+      createTweetInput.type === TweetType.RESPONSE &&
+      !createTweetInput.parentTweetId &&
+      !createTweetInput.parentResponseId
+    ) {
+      throw new Error(
+        `A response must have a parentTweetId or a parentResponseId.`,
       );
     }
 
