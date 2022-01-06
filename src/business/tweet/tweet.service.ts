@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTweetInput } from './dto/create-tweet.input';
+import { CreateTweetInput } from './dto/create-tweet.dto';
 import { TweetType } from './model/tweet.model';
 import { TweetRepository } from './tweet.repository';
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/technical/prisma/prisma.service';
-import { CreateTweetInput } from './dto/create-tweet.input';
+import { CreateTweetInput } from './dto/create-tweet.dto';
 
 @Injectable()
 export class TweetRepository {

@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
-import { CreateTweetInput } from './dto/create-tweet.input';
+import { CreateTweetInput } from './dto/create-tweet.dto';
 import { Tweet } from './model/tweet.model';
 import { TweetService } from './tweet.service';
 
