@@ -20,8 +20,10 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "docker:db": "docker-compose -f docker-compose.yml up -d",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:format": "npx prisma format",
+    "prisma:generate": "npm run prisma:format && npx prisma generate",
+    "prisma:migrate:generate": "npx prisma migrate dev",
+    "prisma:migrate:deploy": "npx prisma migrate deploy"
   },
   "dependencies": {
     "@casl/ability": "^5.4.3",
