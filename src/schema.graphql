@@ -33,12 +33,17 @@ type Mutation {
   createUser(data: CreateUserInput!): User!
   login(data: LoginInput!): Token!
   refreshToken(token: String!): Token!
+  removeTweet(data: RemoveTweetInput!): Boolean!
   signup(data: SignupInput!): Token!
   updateUser(data: UpdateUserInput!): User!
 }
 
 type Query {
   lol: Boolean!
+}
+
+input RemoveTweetInput {
+  tweetId: String!
 }
 
 input SignupInput {

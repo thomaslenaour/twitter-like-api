@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { CreateTweetInput } from './dto/create-tweet.dto';
+import { RemoveTweetInput } from './dto/remove-tweet.dto';
 import { Tweet } from './model/tweet.model';
 import { TweetService } from './tweet.service';
 
@@ -19,5 +20,16 @@ export class TweetResolver {
     }
 
     return createTweetOutput.createdTweet;
+  }
+
+  @Mutation(() => Boolean)
+  async removeTweet(@Args('data') data: RemoveTweetInput) {
+    const removeTweetOutput = await this.tweetService.removeTweet(data);
+
+    if (removeTweetOutput.errorMessage) {
+      const message = removeTweetOutput.errorMessage;
+      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+    }
+    return true;
   }
 }
