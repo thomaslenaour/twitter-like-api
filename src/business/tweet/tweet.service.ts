@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTweetInput } from './dto/create-tweet.input';
+import { RemoveTweetInput, RemoveTweetOutput } from './dto/remove-tweet.dto';
 import { TweetType } from './model/tweet.model';
 import { TweetRepository } from './tweet.repository';
 
@@ -30,5 +31,9 @@ export class TweetService {
 
     //Call repository
     return this.tweetRepository.createTweet(createTweetInput);
+  }
+
+  removeTweet(removeTweetInput: RemoveTweetInput): Promise<RemoveTweetOutput> {
+    return this.tweetRepository.removeTweet(removeTweetInput);
   }
 }
