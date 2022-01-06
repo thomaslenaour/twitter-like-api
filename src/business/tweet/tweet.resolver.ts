@@ -1,7 +1,7 @@
-import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
-import { GqlAuthGuard } from 'src/technical/auth/guards/gql-auth.guard';
-import { CreateTweetInput } from './dto/create-tweet.input';
+import { CreateTweetInput } from './dto/create-tweet.dto';
+import { RemoveTweetInput } from './dto/remove-tweet.dto';
 import { Tweet } from './model/tweet.model';
 import { TweetService } from './tweet.service';
 
@@ -11,13 +11,25 @@ export class TweetResolver {
 
   @Mutation(() => Tweet)
   async createTweet(@Args('data') data: CreateTweetInput) {
-    try {
-      return await this.tweetService.createTweet(data);
-    } catch (err) {
-      throw new HttpException(
-        err.message ? err.message : 'Error during request',
-        HttpStatus.BAD_REQUEST,
-      );
+    const createTweetOutput = await this.tweetService.createTweet(data);
+
+    if (createTweetOutput.errorMessage) {
+      const message = createTweetOutput.errorMessage;
+
+      throw new HttpException(message, HttpStatus.BAD_REQUEST);
     }
+
+    return createTweetOutput.createdTweet;
+  }
+
+  @Mutation(() => Boolean)
+  async removeTweet(@Args('data') data: RemoveTweetInput) {
+    const removeTweetOutput = await this.tweetService.removeTweet(data);
+
+    if (removeTweetOutput.errorMessage) {
+      const message = removeTweetOutput.errorMessage;
+      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+    }
+    return true;
   }
 }
