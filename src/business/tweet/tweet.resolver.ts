@@ -10,13 +10,14 @@ export class TweetResolver {
 
   @Mutation(() => Tweet)
   async createTweet(@Args('data') data: CreateTweetInput) {
-    try {
-      return await this.tweetService.createTweet(data);
-    } catch (err) {
-      throw new HttpException(
-        err.message ? err.message : 'Error during request',
-        HttpStatus.BAD_REQUEST,
-      );
+    const createTweetOutput = await this.tweetService.createTweet(data);
+
+    if (createTweetOutput.errorMessage) {
+      const message = createTweetOutput.errorMessage;
+
+      throw new HttpException(message, HttpStatus.BAD_REQUEST);
     }
+
+    return createTweetOutput.createdTweet;
   }
 }
