@@ -1,6 +1,6 @@
 start:
-	npm run prisma:migrate
 	npm run docker:db
+	npm run prisma:migrate
 	npm run start:dev
 
 db.reset:
