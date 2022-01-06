@@ -1,6 +1,5 @@
-import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
-import { GqlAuthGuard } from 'src/technical/auth/guards/gql-auth.guard';
 import { CreateTweetInput } from './dto/create-tweet.input';
 import { Tweet } from './model/tweet.model';
 import { TweetService } from './tweet.service';
