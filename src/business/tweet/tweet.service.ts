@@ -20,10 +20,14 @@ export class TweetService {
       };
     }
 
+    // A response tweet must have a parent Tweet Or a parent Response
     if (
-      createTweetInput.type === TweetType.RESPONSE &&
-      !createTweetInput.parentTweetId &&
-      !createTweetInput.parentResponseId
+      (createTweetInput.type === TweetType.RESPONSE &&
+        !createTweetInput.parentTweetId &&
+        !createTweetInput.parentResponseId) ||
+      (createTweetInput.type === TweetType.RESPONSE &&
+        createTweetInput.parentTweetId &&
+        createTweetInput.parentResponseId)
     ) {
       return {
         errorMessage: `A response must have a parentTweetId or a parentResponseId.`,
