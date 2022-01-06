@@ -30,12 +30,11 @@ export class TweetService {
       };
     }
 
-    //Call repository
-    const createdTweet = await this.tweetRepository.createTweet(
-      createTweetInput,
-    );
-
-    return { createdTweet };
+    try {
+      return await this.tweetRepository.createTweet(createTweetInput);
+    } catch (err) {
+      return { errorMessage: err.message };
+    }
   }
 
   removeTweet(removeTweetInput: RemoveTweetInput): Promise<RemoveTweetOutput> {

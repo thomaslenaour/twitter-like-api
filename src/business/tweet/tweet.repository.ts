@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Tweet } from '@prisma/client';
 import { PrismaService } from 'src/technical/prisma/prisma.service';
-import { CreateTweetInput } from './dto/create-tweet.dto';
+import { CreateTweetInput, CreateTweetOutput } from './dto/create-tweet.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { RemoveTweetInput, RemoveTweetOutput } from './dto/remove-tweet.dto';
 
@@ -9,8 +8,16 @@ import { RemoveTweetInput, RemoveTweetOutput } from './dto/remove-tweet.dto';
 export class TweetRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createTweet(data: CreateTweetInput): Promise<Tweet> {
-    return this.prisma.tweet.create({ data });
+  async createTweet(data: CreateTweetInput): Promise<CreateTweetOutput> {
+    try {
+      const createdTweet = await this.prisma.tweet.create({ data });
+
+      return { createdTweet };
+    } catch (err) {
+      return {
+        errorMessage: `Error with the ORM, please, verify the request and retry`,
+      };
+    }
   }
 
   async removeTweet(data: RemoveTweetInput): Promise<RemoveTweetOutput> {
