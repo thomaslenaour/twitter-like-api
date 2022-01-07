@@ -1,8 +1,6 @@
-import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { Resolver, Mutation, Query, Args } from '@nestjs/graphql';
-import { GqlAuthGuard } from 'src/technical/auth/guards/gql-auth.guard';
 
-import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 
 import { User } from './models/user.model';
