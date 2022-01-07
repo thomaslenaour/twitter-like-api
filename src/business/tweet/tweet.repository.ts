@@ -1,21 +1,30 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/technical/prisma/prisma.service';
-import { CreateTweetInput, CreateTweetOutput } from './dto/create-tweet.dto';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+
+import { PrismaService } from 'src/technical/prisma/prisma.service';
+import { CreateTweetInput } from './dto/create-tweet.dto';
 
 @Injectable()
 export class TweetRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createTweet(data: CreateTweetInput): Promise<CreateTweetOutput> {
+  async createTweet(data: CreateTweetInput) {
     try {
-      const createdTweet = await this.prisma.tweet.create({ data });
-
-      return { createdTweet };
+      return await this.prisma.tweet.create({ data });
     } catch (err) {
-      return {
-        errorMessage: `Error with the ORM, please, verify the request and retry`,
-      };
+      if (
+        err instanceof PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        throw new BadRequestException(
+          "Unique constraint violation, can't create a tweet with the provided data.",
+        );
+      }
+      throw err;
     }
   }
 
@@ -40,10 +49,14 @@ export class TweetRepository {
   }
 
   async getTweet(id: string) {
-    return this.prisma.tweet.findUnique({
-      where: {
-        id,
-      },
-    });
+    try {
+      return await this.prisma.tweet.findUnique({
+        where: {
+          id,
+        },
+      });
+    } catch (err) {
+      throw err;
+    }
   }
 }

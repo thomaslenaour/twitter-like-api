@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { CreateTweetInput, CreateTweetOutput } from './dto/create-tweet.dto';
+import { CreateTweetInput } from './dto/create-tweet.dto';
 import { TweetType } from './model/tweet.model';
 import { TweetRepository } from './tweet.repository';
 
@@ -12,16 +12,14 @@ export class TweetService {
     return this.tweetRepository.getTweet(tweetId);
   }
 
-  async createTweet(
-    createTweetInput: CreateTweetInput,
-  ): Promise<CreateTweetOutput> {
+  async createTweet(createTweetInput: CreateTweetInput) {
     if (
       createTweetInput.type === TweetType.PARENT &&
       (createTweetInput.parentTweetId || createTweetInput.parentResponseId)
     ) {
-      return {
-        errorMessage: `A new tweet can't be a response to a tweet or a reponse to another response.`,
-      };
+      throw new BadRequestException(
+        "A new tweet can't be a response to a tweet or a reponse to another response.",
+      );
     }
 
     // A response tweet must have a parent Tweet Or a parent Response
@@ -33,15 +31,15 @@ export class TweetService {
         createTweetInput.parentTweetId &&
         createTweetInput.parentResponseId)
     ) {
-      return {
-        errorMessage: `A response must have a parentTweetId or a parentResponseId.`,
-      };
+      throw new BadRequestException(
+        'A response must have a parentTweetId or a parentResponseId.',
+      );
     }
 
     try {
       return await this.tweetRepository.createTweet(createTweetInput);
     } catch (err) {
-      return { errorMessage: err.message };
+      throw err;
     }
   }
 

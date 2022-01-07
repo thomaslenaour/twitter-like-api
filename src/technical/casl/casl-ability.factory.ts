@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import {
   AbilityBuilder,
   AbilityClass,
@@ -29,6 +29,12 @@ export class CaslAbilityFactory {
     const AppAbility = PrismaAbility as AbilityClass<AppAbility>;
     const { can, cannot, build } = new AbilityBuilder(AppAbility);
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) {
+      throw new UnauthorizedException(
+        `Can't find any user with the provided ID.`,
+      );
+    }
 
     switch (user.role) {
       case 'ADMIN':

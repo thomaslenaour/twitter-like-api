@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
@@ -33,7 +33,7 @@ export class TokenService {
         : await this.tokenRepository.createRefreshToken(payload.sub, ipAddress);
 
       if (isRevoked) {
-        throw new Error('Token is revoked.');
+        throw new BadRequestException('Token is revoked.');
       }
 
       const formattedPayload: JwtCreateToken = {
@@ -47,7 +47,7 @@ export class TokenService {
         expiresIn: this.jwtConfig.signOptions.refreshIn,
       });
     } catch (err) {
-      throw new Error(err?.message || 'Invalid token.');
+      throw err;
     }
   }
 

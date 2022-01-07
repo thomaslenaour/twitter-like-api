@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 
 import { LoginInput } from './dto/login.input';
 import { SignupInput } from './dto/signup.input';
-import { HttpException, HttpStatus } from '@nestjs/common';
+
 import { Public } from './public.decorator';
 
 @Resolver(() => Token)
@@ -19,26 +19,31 @@ export class AuthResolver {
     try {
       return await this.authService.createUser(data, '127.0.0.1');
     } catch (err) {
-      throw new HttpException(
-        err?.message || 'Cannot create user for the moment.',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw err;
     }
   }
 
   @Public()
   @Mutation(() => Token)
   async login(@Args('data') data: LoginInput) {
-    return await this.authService.login(
-      data.emailOrPseudo,
-      data.password,
-      '127.0.0.1',
-    );
+    try {
+      return await this.authService.login(
+        data.emailOrPseudo,
+        data.password,
+        '127.0.0.1',
+      );
+    } catch (err) {
+      throw err;
+    }
   }
 
   @Public()
   @Mutation(() => Token)
   async refreshToken(@Args('token') token: string) {
-    return this.authService.refreshToken(token, '127.0.0.1');
+    try {
+      return await this.authService.refreshToken(token, '127.0.0.1');
+    } catch (err) {
+      throw err;
+    }
   }
 }

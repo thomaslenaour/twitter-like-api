@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { Token } from './models/token.model';
 
@@ -52,37 +56,41 @@ export class AuthService {
     password: string,
     ipAddress: string,
   ): Promise<Token> {
-    const isEmail = emailOrPseudo.includes('@');
-    const user = await this.authRepository.getUser(
-      isEmail ? 'email' : 'pseudo',
-      isEmail ? emailOrPseudo.toLowerCase() : emailOrPseudo,
-    );
+    try {
+      const isEmail = emailOrPseudo.includes('@');
+      const user = await this.authRepository.getUser(
+        isEmail ? 'email' : 'pseudo',
+        isEmail ? emailOrPseudo.toLowerCase() : emailOrPseudo,
+      );
 
-    if (!user) {
-      throw new Error('No user found for this email or pseudo.');
+      if (!user) {
+        throw new NotFoundException('No user found for this email or pseudo.');
+      }
+
+      const passwordIsValid = await this.passwordService.validatePassword(
+        password,
+        user.password,
+      );
+
+      if (!passwordIsValid) {
+        throw new BadRequestException('Invalid password.');
+      }
+
+      const payload: JwtCreateToken = {
+        pseudo: user.pseudo,
+        sub: user.id,
+      };
+
+      return {
+        accessToken: this.tokenService.generateAccessToken(payload),
+        refreshToken: await this.tokenService.generateRefreshToken(
+          payload,
+          ipAddress,
+        ),
+      };
+    } catch (err) {
+      throw err;
     }
-
-    const passwordIsValid = await this.passwordService.validatePassword(
-      password,
-      user.password,
-    );
-
-    if (!passwordIsValid) {
-      throw new Error('Invalid password.');
-    }
-
-    const payload: JwtCreateToken = {
-      pseudo: user.pseudo,
-      sub: user.id,
-    };
-
-    return {
-      accessToken: this.tokenService.generateAccessToken(payload),
-      refreshToken: await this.tokenService.generateRefreshToken(
-        payload,
-        ipAddress,
-      ),
-    };
   }
 
   async refreshToken(refreshToken: string, ipAddress: string) {
@@ -104,7 +112,7 @@ export class AuthService {
         ),
       };
     } catch (err) {
-      throw new UnauthorizedException(err?.message || 'Unauthorized');
+      throw err;
     }
   }
 }

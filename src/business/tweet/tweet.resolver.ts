@@ -30,15 +30,11 @@ export class TweetResolver {
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, 'Tweet'))
   @Mutation(() => Tweet)
   async createTweet(@Args('data') data: CreateTweetInput) {
-    const createTweetOutput = await this.tweetService.createTweet(data);
-
-    if (createTweetOutput.errorMessage) {
-      const message = createTweetOutput.errorMessage;
-
-      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+    try {
+      return await this.tweetService.createTweet(data);
+    } catch (err) {
+      throw err;
     }
-
-    return createTweetOutput.createdTweet;
   }
 
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Delete, 'Tweet'))

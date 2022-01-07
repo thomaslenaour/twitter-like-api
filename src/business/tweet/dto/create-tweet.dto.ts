@@ -1,5 +1,4 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Tweet } from '@prisma/client';
 import {
   IsEnum,
   IsNotEmpty,
@@ -7,6 +6,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
+
 import { TweetType } from '../model/tweet.model';
 
 @InputType()
@@ -36,9 +36,4 @@ export class CreateTweetInput {
   @IsOptional()
   @Field({ nullable: true })
   parentResponseId?: string;
-}
-
-export class CreateTweetOutput {
-  createdTweet?: Tweet;
-  errorMessage?: string;
 }
