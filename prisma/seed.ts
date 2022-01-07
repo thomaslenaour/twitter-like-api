@@ -18,13 +18,26 @@ const main = async () => {
         );
 
         for (const value of seedData[model]) {
-          await prisma[model].upsert({
-            where: {
-              id: value.id,
-            },
-            create: value,
-            update: {},
-          });
+          if (model === 'follows') {
+            await prisma[model].upsert({
+              where: {
+                followerId_followingId: {
+                  followerId: value.followerId,
+                  followingId: value.followingId,
+                },
+              },
+              create: value,
+              update: {},
+            });
+          } else {
+            await prisma[model].upsert({
+              where: {
+                id: value.id,
+              },
+              create: value,
+              update: {},
+            });
+          }
         }
 
         console.log(
