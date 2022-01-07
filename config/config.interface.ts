@@ -4,6 +4,13 @@ export interface Config {
   port: number;
   graphql: GqlModuleOptions;
   auth: AuthConfig;
+  database: DatabaseConfig;
+}
+
+export interface DatabaseConfig {
+  seed: {
+    models: string[];
+  };
 }
 
 export interface AuthConfig {

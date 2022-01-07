@@ -37,4 +37,9 @@ export default (): Config => ({
       },
     },
   },
+  database: {
+    seed: {
+      models: ['user', 'tweet'],
+    },
+  },
 });

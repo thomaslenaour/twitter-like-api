@@ -19,8 +19,8 @@ model User {
   pseudo        String         @unique
   email         String         @unique
   password      String
-  description   String?
   birthDate     DateTime
+  description   String?
   phoneNumber   String?
   avatarUrl     String?
   bannerUrl     String?
