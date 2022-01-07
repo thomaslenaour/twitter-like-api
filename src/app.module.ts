@@ -11,6 +11,7 @@ import { AuthModule } from './technical/auth/auth.module';
 import { CaslModule } from './technical/casl/casl.module';
 import { GqlAuthGuard } from './technical/auth/guards/gql-auth.guard';
 import { PrismaModule } from './technical/prisma/prisma.module';
+import { FollowsModule } from './business/follows/follows.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PrismaModule } from './technical/prisma/prisma.module';
     CaslModule,
     UserModule,
     TweetModule,
+    FollowsModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: GqlAuthGuard }],
 })

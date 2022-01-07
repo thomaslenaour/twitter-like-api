@@ -6,7 +6,7 @@ export const user: Prisma.UserCreateManyInput[] = [
     name: 'Alex Boisseau',
     pseudo: 'boiss',
     email: 'alex@alex.com',
-    password: '$2y$10$n0k1RaNk35C6U82Jb7DVCuIe5r7aaqyKybn89N7nxmEA1.cQjERwi', // pass
+    password: '$2b$10$qtzUoXUYKhu9qSZbHwRqxecsYwi6h0pHgFSUgV.haeuBR2Phyov7W', // password
     birthDate: new Date('2000-09-21'),
   },
   {
@@ -14,7 +14,7 @@ export const user: Prisma.UserCreateManyInput[] = [
     name: 'Thomas Le Naour',
     pseudo: 'tlnkorr',
     email: 'thomas@thomas.com',
-    password: '$2y$10$n0k1RaNk35C6U82Jb7DVCuIe5r7aaqyKybn89N7nxmEA1.cQjERwi',
+    password: '$2b$10$qtzUoXUYKhu9qSZbHwRqxecsYwi6h0pHgFSUgV.haeuBR2Phyov7W',
     birthDate: new Date('2000-03-21'),
   },
   {
@@ -22,7 +22,7 @@ export const user: Prisma.UserCreateManyInput[] = [
     name: 'Sascha Salles',
     pseudo: 'sascha',
     email: 'sascha@sascha.com',
-    password: '$2y$10$n0k1RaNk35C6U82Jb7DVCuIe5r7aaqyKybn89N7nxmEA1.cQjERwi',
+    password: '$2b$10$qtzUoXUYKhu9qSZbHwRqxecsYwi6h0pHgFSUgV.haeuBR2Phyov7W',
     birthDate: new Date('1999-08-12'),
   },
   {
@@ -30,7 +30,7 @@ export const user: Prisma.UserCreateManyInput[] = [
     name: 'Théo Delas',
     pseudo: 'theo',
     email: 'theo@theo.com',
-    password: '$2y$10$n0k1RaNk35C6U82Jb7DVCuIe5r7aaqyKybn89N7nxmEA1.cQjERwi',
+    password: '$2b$10$qtzUoXUYKhu9qSZbHwRqxecsYwi6h0pHgFSUgV.haeuBR2Phyov7W',
     birthDate: new Date('1997-12-08'),
   },
   {
@@ -38,7 +38,7 @@ export const user: Prisma.UserCreateManyInput[] = [
     name: 'Antoine Delbrel',
     pseudo: 'antoine',
     email: 'antoine@antoine.com',
-    password: '$2y$10$n0k1RaNk35C6U82Jb7DVCuIe5r7aaqyKybn89N7nxmEA1.cQjERwi',
+    password: '$2b$10$qtzUoXUYKhu9qSZbHwRqxecsYwi6h0pHgFSUgV.haeuBR2Phyov7W',
     birthDate: new Date('1999-04-26'),
   },
 ];
