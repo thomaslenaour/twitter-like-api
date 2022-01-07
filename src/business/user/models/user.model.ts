@@ -1,6 +1,9 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { UserRole } from '@prisma/client';
 
 import { BaseModel } from 'src/technical/models/base-model';
+
+registerEnumType(UserRole, { name: 'UserRole' });
 
 @ObjectType()
 export class User extends BaseModel {
@@ -18,6 +21,9 @@ export class User extends BaseModel {
 
   @Field(() => Date)
   birthDate: Date;
+
+  @Field(() => UserRole)
+  role: UserRole;
 
   @Field({ nullable: true })
   phoneNumber?: string;
