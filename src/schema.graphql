@@ -10,14 +10,6 @@ input CreateTweetInput {
   type: TweetType!
 }
 
-input CreateUserInput {
-  birthDate: DateTime!
-  email: String!
-  name: String!
-  password: String!
-  pseudo: String!
-}
-
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -30,7 +22,6 @@ input LoginInput {
 
 type Mutation {
   createTweet(data: CreateTweetInput!): Tweet!
-  createUser(data: CreateUserInput!): User!
   login(data: LoginInput!): Token!
   refreshToken(token: String!): Token!
   removeTweet(tweetId: String!): Tweet!

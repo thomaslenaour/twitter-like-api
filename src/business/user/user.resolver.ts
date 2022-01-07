@@ -35,18 +35,6 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async createUser(@Args('data') data: CreateUserInput) {
-    try {
-      return await this.userService.createUser(data);
-    } catch (err) {
-      throw new HttpException(
-        err?.message || 'Unknow error',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
-
-  @Mutation(() => User)
   async updateUser(@Args('data') data: UpdateUserInput) {
     try {
       return await this.userService.updateUser(data);
