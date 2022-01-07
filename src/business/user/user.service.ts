@@ -22,7 +22,7 @@ export class UserService {
       );
     }
 
-    return this.userRepository.getUser(where, value);
+    return user;
   }
 
   async createUser(data: CreateUserInput) {

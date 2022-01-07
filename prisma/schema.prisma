@@ -29,6 +29,21 @@ model User {
   role          UserRole       @default(USER)
   tweets        Tweet[]
   refreshTokens RefreshToken[]
+  followers     Follows[]      @relation("follower")
+  following     Follows[]      @relation("following")
+}
+
+model Follows {
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  kind        String   @default("Follows")
+  follower    User     @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User     @relation("following", fields: [followingId], references: [id])
+  followingId String
+  isBlocked   Boolean  @default(false)
+
+  @@id([followerId, followingId])
 }
 
 model Tweet {

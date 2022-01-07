@@ -1,6 +1,8 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { UserRole } from '@prisma/client';
 
+import { Follows } from 'src/business/follows/models/follows.model';
+
 import { BaseModel } from 'src/technical/models/base-model';
 
 registerEnumType(UserRole, { name: 'UserRole' });
@@ -24,6 +26,12 @@ export class User extends BaseModel {
 
   @Field(() => UserRole)
   role: UserRole;
+
+  @Field(() => [Follows])
+  followers: Follows[];
+
+  @Field(() => [Follows])
+  following: Follows[];
 
   @Field({ nullable: true })
   phoneNumber?: string;

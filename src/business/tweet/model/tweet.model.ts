@@ -1,4 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+
 import { User } from 'src/business/user/models/user.model';
 
 import { BaseModel } from 'src/technical/models/base-model';

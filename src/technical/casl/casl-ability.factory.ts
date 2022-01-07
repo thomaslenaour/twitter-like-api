@@ -5,7 +5,7 @@ import {
   ExtractSubjectType,
 } from '@casl/ability';
 import { PrismaAbility, Subjects } from '@casl/prisma';
-import { RefreshToken, Tweet, User } from '@prisma/client';
+import { Follows, RefreshToken, Tweet, User } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -15,6 +15,7 @@ type PrismaSubjects = Subjects<{
   User: User;
   Tweet: Tweet;
   RefreshToken: RefreshToken;
+  Follows: Follows;
 }>;
 
 type AppSubjects = PrismaSubjects | 'all';

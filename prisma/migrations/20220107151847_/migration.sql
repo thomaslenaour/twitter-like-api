@@ -27,6 +27,18 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "Follows" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "kind" TEXT NOT NULL DEFAULT E'Follows',
+    "followerId" TEXT NOT NULL,
+    "followingId" TEXT NOT NULL,
+    "isBlocked" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "Follows_pkey" PRIMARY KEY ("followerId","followingId")
+);
+
+-- CreateTable
 CREATE TABLE "Tweet" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -67,6 +79,12 @@ CREATE UNIQUE INDEX "Tweet_parentResponseId_key" ON "Tweet"("parentResponseId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "RefreshToken_jti_key" ON "RefreshToken"("jti");
+
+-- AddForeignKey
+ALTER TABLE "Follows" ADD CONSTRAINT "Follows_followerId_fkey" FOREIGN KEY ("followerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Follows" ADD CONSTRAINT "Follows_followingId_fkey" FOREIGN KEY ("followingId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Tweet" ADD CONSTRAINT "Tweet_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

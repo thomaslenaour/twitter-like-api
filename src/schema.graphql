@@ -15,6 +15,14 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Follows {
+  follower: User!
+  followerId: String!
+  following: User!
+  followingId: String!
+  isBlocked: Boolean!
+}
+
 input LoginInput {
   emailOrPseudo: String!
   password: String!
@@ -22,16 +30,18 @@ input LoginInput {
 
 type Mutation {
   createTweet(data: CreateTweetInput!): Tweet!
+  follow(userId: String!): Follows!
   login(data: LoginInput!): Token!
   refreshToken(token: String!): Token!
   removeTweet(tweetId: String!): Tweet!
   signup(data: SignupInput!): Token!
+  unfollow(userId: String!): Follows!
   updateUser(data: UpdateUserInput!): User!
 }
 
 type Query {
   getTweet(tweetId: String!): Tweet!
-  lol: Boolean!
+  user(userId: String!): User!
 }
 
 input SignupInput {
@@ -97,6 +107,8 @@ type User {
   createdAt: DateTime!
   description: String
   email: String!
+  followers: [Follows!]!
+  following: [Follows!]!
 
   """Identifies the ID of the object (always unique)."""
   id: String!

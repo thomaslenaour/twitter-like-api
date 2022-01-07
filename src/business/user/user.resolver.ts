@@ -1,35 +1,38 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { Resolver, Mutation, Query, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Mutation,
+  Query,
+  Args,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
+
+import { Public } from 'src/technical/auth/public.decorator';
+import { FollowsService } from '../follows/follows.service';
+import { Follows } from '../follows/models/follows.model';
 
 import { UpdateUserInput } from './dto/update-user.input';
 
 import { User } from './models/user.model';
-import { CurrentUser } from './user.decorator';
 
 import { UserService } from './user.service';
 
 @Resolver(() => User)
 export class UserResolver {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private followsService: FollowsService,
+  ) {}
 
-  // @Query(() => User)
-  // async user(@Args('userId') userId: string) {
-  //   const user = await this.userService.getUser('id', userId);
-
-  //   if (!user) {
-  //     throw new HttpException(
-  //       'No user found with the provided ID.',
-  //       HttpStatus.BAD_REQUEST,
-  //     );
-  //   }
-
-  //   return user;
-  // }
-
-  @Query(() => Boolean)
-  async lol(@CurrentUser() user: User) {
-    console.log('user', user);
-    return true;
+  @Public()
+  @Query(() => User)
+  async user(@Args('userId') userId: string) {
+    try {
+      return await this.userService.getUser('id', userId);
+    } catch (err) {
+      throw err;
+    }
   }
 
   @Mutation(() => User)
@@ -42,5 +45,15 @@ export class UserResolver {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  @ResolveField('followers', () => [Follows])
+  async followers(@Parent() user: User) {
+    return await this.followsService.getFollowers(user.id);
+  }
+
+  @ResolveField('following', () => [Follows])
+  async following(@Parent() user: User) {
+    return await this.followsService.getFollowing(user.id);
   }
 }
