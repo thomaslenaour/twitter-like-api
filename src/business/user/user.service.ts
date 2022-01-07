@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { CreateUserInput } from './dto/create-user.input';
@@ -13,9 +13,17 @@ import { getAge } from './utils/user.utils';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  // async getUser(where: GetUserWhere, value: string) {
-  //   return this.userRepository.getUser(where, value);
-  // }
+  async getUser(where: GetUserWhere, value: string) {
+    const user = await this.userRepository.getUser(where, value);
+
+    if (!user) {
+      throw new NotFoundException(
+        `Cannot find user where ${where} is equal to ${value}`,
+      );
+    }
+
+    return this.userRepository.getUser(where, value);
+  }
 
   async createUser(data: CreateUserInput) {
     if (getAge(data.birthDate) < 15) {

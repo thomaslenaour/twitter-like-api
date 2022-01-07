@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { CreateTweetInput } from './dto/create-tweet.dto';
 import { TweetType } from './model/tweet.model';
@@ -8,8 +12,14 @@ import { TweetRepository } from './tweet.repository';
 export class TweetService {
   constructor(private readonly tweetRepository: TweetRepository) {}
 
-  getTweet(tweetId: string) {
-    return this.tweetRepository.getTweet(tweetId);
+  async getTweet(tweetId: string) {
+    const tweet = await this.tweetRepository.getTweet(tweetId);
+
+    if (!tweet) {
+      throw new NotFoundException(`No tweet found for this id : ${tweetId}`);
+    }
+
+    return tweet;
   }
 
   async createTweet(createTweetInput: CreateTweetInput) {

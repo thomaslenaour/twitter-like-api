@@ -1,10 +1,13 @@
 import { subject } from '@casl/ability';
+import { UnauthorizedException } from '@nestjs/common';
 import {
-  HttpException,
-  HttpStatus,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { Resolver, Mutation, Args } from '@nestjs/graphql';
+  Resolver,
+  Mutation,
+  Query,
+  Args,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 
 import {
   AppAbility,
@@ -19,12 +22,15 @@ import { CurrentUser } from '../user/user.decorator';
 
 import { CreateTweetInput } from './dto/create-tweet.dto';
 import { Tweet } from './model/tweet.model';
+import { User } from '../user/models/user.model';
+import { UserService } from '../user/user.service';
 
 @Resolver(() => Tweet)
 export class TweetResolver {
   constructor(
     private readonly tweetService: TweetService,
     private caslAbilityFactory: CaslAbilityFactory,
+    private userService: UserService,
   ) {}
 
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, 'Tweet'))
@@ -52,5 +58,17 @@ export class TweetResolver {
     } catch (err) {
       throw err;
     }
+  }
+
+  @Query(() => Tweet)
+  async getTweet(@Args('tweetId') tweetId: string) {
+    return await this.tweetService.getTweet(tweetId);
+  }
+
+  @ResolveField('author', () => User)
+  async user(@Parent() tweet: Tweet) {
+    const { authorId } = tweet;
+
+    return await this.userService.getUser('id', authorId);
   }
 }
