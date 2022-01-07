@@ -9,8 +9,8 @@ import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { PasswordService } from './services/password.service';
 import { TokenService } from './services/token.service';
-import { AuthRepository } from './repositories/auth.repository';
 import { TokenRepository } from './repositories/token.repository';
+import { UserRepository } from 'src/business/user/user.repository';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
 
@@ -35,8 +35,8 @@ import { GqlAuthGuard } from './guards/gql-auth.guard';
     AuthService,
     PasswordService,
     TokenService,
-    AuthRepository,
     TokenRepository,
+    UserRepository,
     JwtStrategy,
     GqlAuthGuard,
   ],
