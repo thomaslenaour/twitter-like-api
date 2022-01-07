@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/technical/prisma/prisma.service';
 import { CreateTweetInput, CreateTweetOutput } from './dto/create-tweet.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
-import { RemoveTweetInput, RemoveTweetOutput } from './dto/remove-tweet.dto';
 
 @Injectable()
 export class TweetRepository {
@@ -20,24 +19,23 @@ export class TweetRepository {
     }
   }
 
-  async removeTweet(data: RemoveTweetInput): Promise<RemoveTweetOutput> {
+  async removeTweet(tweetId: string) {
     try {
-      const deletedTweet = await this.prisma.tweet.delete({
+      return await this.prisma.tweet.delete({
         where: {
-          id: data.tweetId,
+          id: tweetId,
         },
       });
-      return { deletedTweet };
     } catch (err) {
       if (
         err instanceof PrismaClientKnownRequestError &&
         err.code === 'P2025'
       ) {
-        return {
-          errorMessage: `Tweet not found for the following id : ${data.tweetId}`,
-        };
+        throw new NotFoundException(
+          `Tweet not found for the following id : ${tweetId}`,
+        );
       }
-      return { errorMessage: err.message };
+      throw err;
     }
   }
 

@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
+
 import { CreateTweetInput, CreateTweetOutput } from './dto/create-tweet.dto';
-import { RemoveTweetInput, RemoveTweetOutput } from './dto/remove-tweet.dto';
 import { TweetType } from './model/tweet.model';
 import { TweetRepository } from './tweet.repository';
 
 @Injectable()
 export class TweetService {
   constructor(private readonly tweetRepository: TweetRepository) {}
+
+  getTweet(tweetId: string) {
+    return this.tweetRepository.getTweet(tweetId);
+  }
 
   async createTweet(
     createTweetInput: CreateTweetInput,
@@ -41,7 +45,7 @@ export class TweetService {
     }
   }
 
-  removeTweet(removeTweetInput: RemoveTweetInput): Promise<RemoveTweetOutput> {
-    return this.tweetRepository.removeTweet(removeTweetInput);
+  removeTweet(tweetId: string) {
+    return this.tweetRepository.removeTweet(tweetId);
   }
 }
