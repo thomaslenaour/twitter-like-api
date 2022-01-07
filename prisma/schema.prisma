@@ -64,6 +64,7 @@ model RefreshToken {
 enum TweetType {
   PARENT
   RESPONSE
+  RESPONSE_TO_RESPONSE
 }
 
 enum UserRole {
