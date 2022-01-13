@@ -22,10 +22,13 @@ export class PoliciesGuard implements CanActivate {
     const { userId } =
       GqlExecutionContext.create(context).getContext().req.user;
     const ability = await this.caslAbilityFactory.createForUser(userId);
+    console.log('lollll');
 
-    return policyHandlers.every((handler) =>
-      this.execPolicyHandler(handler, ability),
-    );
+    return policyHandlers.every((handler) => {
+      const isPermissionValid = this.execPolicyHandler(handler, ability);
+      console.log(isPermissionValid, 'handler', handler);
+      return isPermissionValid;
+    });
   }
 
   private execPolicyHandler(handler: PolicyHandler, ability: AppAbility) {

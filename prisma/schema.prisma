@@ -11,26 +11,40 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  kind          String         @default("User")
-  name          String
-  pseudo        String         @unique
-  email         String         @unique
-  password      String
-  birthDate     DateTime
-  description   String?
-  phoneNumber   String?
-  avatarUrl     String?
-  bannerUrl     String?
-  websiteUrl    String?
-  location      String?
-  role          UserRole       @default(USER)
-  tweets        Tweet[]
-  refreshTokens RefreshToken[]
-  followers     Follows[]      @relation("follower")
-  following     Follows[]      @relation("following")
+  id                String             @id @default(cuid())
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  kind              String             @default("User")
+  name              String
+  pseudo            String             @unique
+  email             String             @unique
+  password          String
+  birthDate         DateTime
+  description       String?
+  phoneNumber       String?
+  avatarUrl         String?
+  bannerUrl         String?
+  websiteUrl        String?
+  location          String?
+  role              UserRole           @default(USER)
+  tweets            Tweet[]
+  tweetInteractions TweetInteraction[]
+  refreshTokens     RefreshToken[]
+  followers         Follows[]          @relation("follower")
+  following         Follows[]          @relation("following")
+}
+
+model RefreshToken {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  kind           String   @default("RefreshToken")
+  user           User     @relation(fields: [userId], references: [id])
+  userId         String
+  jti            String   @unique
+  isRevoked      Boolean  @default(false)
+  expirationDate DateTime
+  ipAddress      String
 }
 
 model Follows {
@@ -47,33 +61,41 @@ model Follows {
 }
 
 model Tweet {
-  id                  String    @id @default(cuid())
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-  kind                String    @default("Tweet")
-  content             String    @db.VarChar(280)
-  author              User      @relation(fields: [authorId], references: [id])
+  id                  String             @id @default(cuid())
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  kind                String             @default("Tweet")
+  content             String             @db.VarChar(280)
+  author              User               @relation(fields: [authorId], references: [id])
   authorId            String
-  type                TweetType @default(PARENT)
+  type                TweetType          @default(PARENT)
   parentTweetId       String?
-  parentTweet         Tweet?    @relation("ParentTweetResponsesTweet", fields: [parentTweetId], references: [id])
-  responsesTweet      Tweet[]   @relation("ParentTweetResponsesTweet")
-  parentResponseId    String?   @unique
-  parentResponseTweet Tweet?    @relation("ResponseToResponse", fields: [parentResponseId], references: [id])
-  responseTweet       Tweet?    @relation("ResponseToResponse")
+  parentTweet         Tweet?             @relation("ParentTweetResponsesTweet", fields: [parentTweetId], references: [id])
+  responsesTweet      Tweet[]            @relation("ParentTweetResponsesTweet")
+  parentResponseId    String?            @unique
+  parentResponseTweet Tweet?             @relation("ResponseToResponse", fields: [parentResponseId], references: [id])
+  responseTweet       Tweet?             @relation("ResponseToResponse")
+  interactions        TweetInteraction[]
 }
 
-model RefreshToken {
-  id             String   @id @default(cuid())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  kind           String   @default("RefreshToken")
-  user           User     @relation(fields: [userId], references: [id])
-  userId         String
-  jti            String   @unique
-  isRevoked      Boolean  @default(false)
-  expirationDate DateTime
-  ipAddress      String
+model TweetInteraction {
+  id        String               @id @default(cuid())
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  kind      String               @default("TweetInteraction")
+  type      TweetInteractionType
+  tweet     Tweet                @relation(fields: [tweetId], references: [id])
+  tweetId   String
+  user      User                 @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@unique([tweetId, userId, type])
+}
+
+enum UserRole {
+  ADMIN
+  MODERATOR
+  USER
 }
 
 enum TweetType {
@@ -82,8 +104,7 @@ enum TweetType {
   RESPONSE_TO_RESPONSE
 }
 
-enum UserRole {
-  ADMIN
-  MODERATOR
-  USER
+enum TweetInteractionType {
+  RETWEET
+  LIKE
 }

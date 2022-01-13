@@ -1,5 +1,5 @@
 import { subject } from '@casl/ability';
-import { UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import {
   Resolver,
   Mutation,
@@ -19,20 +19,24 @@ import { Action } from 'src/technical/casl/types/casl.types';
 
 import { CheckPolicies } from 'src/technical/casl/policy.decorator';
 import { CurrentUser } from '../user/user.decorator';
+import { JwtDecodedUser } from 'src/technical/auth/types/jwt.interface';
 
 import { CreateTweetInput } from './dto/create-tweet.dto';
 import { Tweet } from './model/tweet.model';
 import { User } from '../user/models/user.model';
 import { UserService } from '../user/user.service';
+import { GqlAuthGuard } from 'src/technical/auth/guards/gql-auth.guard';
+import { PoliciesGuard } from 'src/technical/casl/policies.guard';
 
 @Resolver(() => Tweet)
 export class TweetResolver {
   constructor(
-    private readonly tweetService: TweetService,
+    private tweetService: TweetService,
     private caslAbilityFactory: CaslAbilityFactory,
     private userService: UserService,
   ) {}
 
+  @UseGuards(GqlAuthGuard, PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, 'Tweet'))
   @Mutation(() => Tweet)
   async createTweet(@Args('data') data: CreateTweetInput) {
@@ -43,9 +47,13 @@ export class TweetResolver {
     }
   }
 
+  @UseGuards(GqlAuthGuard, PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Delete, 'Tweet'))
   @Mutation(() => Tweet)
-  async removeTweet(@Args('tweetId') tweetId: string, @CurrentUser() user) {
+  async removeTweet(
+    @Args('tweetId') tweetId: string,
+    @CurrentUser() user: JwtDecodedUser,
+  ) {
     try {
       const ability = await this.caslAbilityFactory.createForUser(user.userId);
       const tweet = await this.tweetService.getTweet(tweetId);

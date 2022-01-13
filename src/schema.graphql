@@ -2,12 +2,22 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+enum BTweetInteractionType {
+  LIKE
+  RETWEET
+}
+
 input CreateTweetInput {
   authorId: String!
   content: String!
   parentResponseId: String
   parentTweetId: String
   type: TweetType!
+}
+
+input CreateTweetInteractionInput {
+  tweetId: String!
+  type: BTweetInteractionType!
 }
 
 """
@@ -31,6 +41,7 @@ input LoginInput {
 type Mutation {
   createTweet(data: CreateTweetInput!): Tweet!
   follow(userId: String!): Follows!
+  interact(data: CreateTweetInteractionInput!): TweetInteraction!
   login(data: LoginInput!): Token!
   refreshToken(token: String!): Token!
   removeTweet(tweetId: String!): Tweet!
@@ -78,6 +89,20 @@ type Tweet {
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
+}
+
+type TweetInteraction {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Identifies the ID of the object (always unique)."""
+  id: String!
+  tweet: Tweet!
+  type: BTweetInteractionType!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User!
 }
 
 enum TweetType {

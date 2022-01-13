@@ -5,6 +5,8 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { JwtDecodedUser } from 'src/technical/auth/types/jwt.interface';
+
 import { User } from '../user/models/user.model';
 
 import { CurrentUser } from '../user/user.decorator';
@@ -22,7 +24,10 @@ export class FollowsResolver {
   ) {}
 
   @Mutation(() => Follows)
-  async follow(@Args('userId') userId: string, @CurrentUser() user) {
+  async follow(
+    @Args('userId') userId: string,
+    @CurrentUser() user: JwtDecodedUser,
+  ) {
     try {
       return await this.followsService.follow(userId, user.userId);
     } catch (err) {
@@ -31,7 +36,10 @@ export class FollowsResolver {
   }
 
   @Mutation(() => Follows)
-  async unfollow(@Args('userId') userId: string, @CurrentUser() user) {
+  async unfollow(
+    @Args('userId') userId: string,
+    @CurrentUser() user: JwtDecodedUser,
+  ) {
     try {
       return await this.followsService.unfollow(userId, user.userId);
     } catch (err) {

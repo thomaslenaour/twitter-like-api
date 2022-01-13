@@ -18,3 +18,8 @@ export interface JwtRefreshTokenPayload {
   iat: number;
   jti: string;
 }
+
+export interface JwtDecodedUser {
+  userId: string;
+  pseudo: string;
+}

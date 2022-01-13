@@ -5,7 +5,13 @@ import {
   ExtractSubjectType,
 } from '@casl/ability';
 import { PrismaAbility, Subjects } from '@casl/prisma';
-import { Follows, RefreshToken, Tweet, User } from '@prisma/client';
+import {
+  Follows,
+  RefreshToken,
+  Tweet,
+  TweetInteraction,
+  User,
+} from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -16,6 +22,7 @@ type PrismaSubjects = Subjects<{
   Tweet: Tweet;
   RefreshToken: RefreshToken;
   Follows: Follows;
+  TweetInteraction: TweetInteraction;
 }>;
 
 type AppSubjects = PrismaSubjects | 'all';
@@ -47,6 +54,8 @@ export class CaslAbilityFactory {
         can(Action.Create, 'Tweet');
         can(Action.Update, 'Tweet', { authorId: user.id });
         can(Action.Delete, 'Tweet', { authorId: user.id });
+        can(Action.Create, 'TweetInteraction');
+        can(Action.Delete, 'TweetInteraction', { userId: user.id });
 
       default:
         can(Action.Read, 'all');
