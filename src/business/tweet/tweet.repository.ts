@@ -83,6 +83,13 @@ export class TweetRepository {
             in: subscriptionsId,
           },
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        include: {
+          parentResponseTweet: true,
+          parentTweet: true,
+        },
       });
     } catch (err) {
       throw err;
