@@ -95,11 +95,13 @@ type TweetInteraction {
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!
   tweet: Tweet!
+  tweetId: String!
   type: BTweetInteractionType!
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
   user: User!
+  userId: String!
 }
 
 enum TweetType {

@@ -19,6 +19,12 @@ export class TweetInteraction extends BaseModelWithoutID {
   @Field(() => Tweet)
   tweet: Tweet;
 
+  @Field()
+  tweetId: string;
+
   @Field(() => User)
   user: User;
+
+  @Field()
+  userId: string;
 }

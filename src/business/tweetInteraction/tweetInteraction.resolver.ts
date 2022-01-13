@@ -1,5 +1,11 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 
 import { GqlAuthGuard } from 'src/technical/auth/guards/gql-auth.guard';
 import { AppAbility } from 'src/technical/casl/casl-ability.factory';
@@ -15,9 +21,19 @@ import { TweetInteractionService } from './tweetInteraction.service';
 
 import { CreateTweetInteractionInput } from './dto/create-tweetInteraction.input';
 
+import { Tweet } from '../tweet/model/tweet.model';
+import { User } from '../user/models/user.model';
+
+import { UserService } from '../user/user.service';
+import { TweetService } from '../tweet/tweet.service';
+
 @Resolver(TweetInteraction)
 export class TweetInteractionResolver {
-  constructor(private tweetInteractionService: TweetInteractionService) {}
+  constructor(
+    private tweetInteractionService: TweetInteractionService,
+    private tweetService: TweetService,
+    private userService: UserService,
+  ) {}
 
   @UseGuards(GqlAuthGuard, PoliciesGuard)
   @CheckPolicies(
@@ -50,5 +66,15 @@ export class TweetInteractionResolver {
     } catch (err) {
       throw err;
     }
+  }
+
+  @ResolveField('tweet', () => Tweet)
+  tweet(@Parent() tweetInteraction: TweetInteraction) {
+    return this.tweetService.getTweet(tweetInteraction.tweetId);
+  }
+
+  @ResolveField('user', () => User)
+  user(@Parent() tweetInteraction: TweetInteraction) {
+    return this.userService.getUser('id', tweetInteraction.userId);
   }
 }
