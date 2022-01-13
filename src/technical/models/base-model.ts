@@ -18,3 +18,17 @@ export abstract class BaseModel {
   })
   updatedAt: Date;
 }
+
+@ObjectType({ isAbstract: true })
+export abstract class BaseModelWithoutID {
+  @Field({
+    description: 'Identifies the date and time when the object was created.',
+  })
+  createdAt: Date;
+
+  @Field({
+    description:
+      'Identifies the date and time when the object was last updated.',
+  })
+  updatedAt: Date;
+}

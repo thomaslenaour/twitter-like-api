@@ -2,22 +2,19 @@ import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/technical/prisma/prisma.service';
 
-import { CreateTweetInteractionDto } from './dto/create-tweetInteraction.dto';
-import { GetUniqueTweetInteractionDto } from './dto/get-tweetInteraction.dto';
+import { GetOrCreateOrDeleteTweetInteractionDto } from './dto/tweetInteraction.dto';
 
 @Injectable()
 export class TweetInteractionRepository {
   constructor(private prisma: PrismaService) {}
 
-  async getUniqueTweetInteraction(data: GetUniqueTweetInteractionDto) {
+  async getUniqueTweetInteraction(
+    data: GetOrCreateOrDeleteTweetInteractionDto,
+  ) {
     try {
       return await this.prisma.tweetInteraction.findUnique({
         where: {
-          tweetId_userId_type: {
-            tweetId: data.tweetId,
-            userId: data.userId,
-            type: data.type,
-          },
+          tweetId_userId_type: data,
         },
       });
     } catch (err) {
@@ -25,7 +22,7 @@ export class TweetInteractionRepository {
     }
   }
 
-  async createTweetInteraction(data: CreateTweetInteractionDto) {
+  async createTweetInteraction(data: GetOrCreateOrDeleteTweetInteractionDto) {
     try {
       return await this.prisma.tweetInteraction.create({ data });
     } catch (err) {
@@ -33,10 +30,10 @@ export class TweetInteractionRepository {
     }
   }
 
-  async deleteTweetInteraction(tweetInteractionId: string) {
+  async deleteTweetInteraction(data: GetOrCreateOrDeleteTweetInteractionDto) {
     try {
       return await this.prisma.tweetInteraction.delete({
-        where: { id: tweetInteractionId },
+        where: { tweetId_userId_type: data },
       });
     } catch (err) {
       throw err;

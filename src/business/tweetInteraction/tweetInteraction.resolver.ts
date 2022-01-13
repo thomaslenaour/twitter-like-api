@@ -40,15 +40,13 @@ export class TweetInteractionResolver {
           tweetInteractionData,
         );
 
-      if (existingTweetInteraction) {
-        return await this.tweetInteractionService.deleteTweetInteraction(
-          existingTweetInteraction.id,
-        );
-      }
-
-      return await this.tweetInteractionService.createTweetInteraction(
-        tweetInteractionData,
-      );
+      return existingTweetInteraction
+        ? await this.tweetInteractionService.deleteTweetInteraction(
+            tweetInteractionData,
+          )
+        : await this.tweetInteractionService.createTweetInteraction(
+            tweetInteractionData,
+          );
     } catch (err) {
       throw err;
     }

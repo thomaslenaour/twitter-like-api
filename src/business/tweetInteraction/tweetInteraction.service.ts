@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { CreateTweetInteractionDto } from './dto/create-tweetInteraction.dto';
-import { GetUniqueTweetInteractionDto } from './dto/get-tweetInteraction.dto';
+import { GetOrCreateOrDeleteTweetInteractionDto } from './dto/tweetInteraction.dto';
 
 import { TweetInteractionRepository } from './tweetInteraction.repository';
 
@@ -9,7 +8,9 @@ import { TweetInteractionRepository } from './tweetInteraction.repository';
 export class TweetInteractionService {
   constructor(private tweetInteractionRepository: TweetInteractionRepository) {}
 
-  async getUniqueTweetInteraction(data: GetUniqueTweetInteractionDto) {
+  async getUniqueTweetInteraction(
+    data: GetOrCreateOrDeleteTweetInteractionDto,
+  ) {
     try {
       return await this.tweetInteractionRepository.getUniqueTweetInteraction(
         data,
@@ -19,7 +20,7 @@ export class TweetInteractionService {
     }
   }
 
-  async createTweetInteraction(data: CreateTweetInteractionDto) {
+  async createTweetInteraction(data: GetOrCreateOrDeleteTweetInteractionDto) {
     try {
       return await this.tweetInteractionRepository.createTweetInteraction(data);
     } catch (err) {
@@ -27,11 +28,9 @@ export class TweetInteractionService {
     }
   }
 
-  async deleteTweetInteraction(tweetInteractionId: string) {
+  async deleteTweetInteraction(data: GetOrCreateOrDeleteTweetInteractionDto) {
     try {
-      return await this.tweetInteractionRepository.deleteTweetInteraction(
-        tweetInteractionId,
-      );
+      return await this.tweetInteractionRepository.deleteTweetInteraction(data);
     } catch (err) {
       throw err;
     }

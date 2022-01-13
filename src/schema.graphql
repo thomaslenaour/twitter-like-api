@@ -94,9 +94,6 @@ type Tweet {
 type TweetInteraction {
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!
-
-  """Identifies the ID of the object (always unique)."""
-  id: String!
   tweet: Tweet!
   type: BTweetInteractionType!
 

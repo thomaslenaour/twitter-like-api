@@ -24,11 +24,9 @@ export class PoliciesGuard implements CanActivate {
     const ability = await this.caslAbilityFactory.createForUser(userId);
     console.log('lollll');
 
-    return policyHandlers.every((handler) => {
-      const isPermissionValid = this.execPolicyHandler(handler, ability);
-      console.log(isPermissionValid, 'handler', handler);
-      return isPermissionValid;
-    });
+    return policyHandlers.every((handler) =>
+      this.execPolicyHandler(handler, ability),
+    );
   }
 
   private execPolicyHandler(handler: PolicyHandler, ability: AppAbility) {
