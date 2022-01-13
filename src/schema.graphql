@@ -52,6 +52,7 @@ type Mutation {
 
 type Query {
   getTweet(tweetId: String!): Tweet!
+  getTweets: [Tweet!]!
   user(userId: String!): User!
 }
 
