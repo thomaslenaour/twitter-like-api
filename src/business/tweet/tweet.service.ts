@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { UserService } from '../user/user.service';
 
 import { CreateTweetInput } from './dto/create-tweet.dto';
 import { TweetType } from './model/tweet.model';
@@ -10,7 +11,10 @@ import { TweetRepository } from './tweet.repository';
 
 @Injectable()
 export class TweetService {
-  constructor(private readonly tweetRepository: TweetRepository) {}
+  constructor(
+    private readonly tweetRepository: TweetRepository,
+    private readonly userService: UserService,
+  ) {}
 
   async getTweet(tweetId: string) {
     const tweet = await this.tweetRepository.getTweet(tweetId);
@@ -20,6 +24,10 @@ export class TweetService {
     }
 
     return tweet;
+  }
+
+  async getTweets(userId: string) {
+    return await this.tweetRepository.getTweets(userId);
   }
 
   async createTweet(createTweetInput: CreateTweetInput) {

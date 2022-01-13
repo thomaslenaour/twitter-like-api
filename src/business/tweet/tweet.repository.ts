@@ -59,4 +59,33 @@ export class TweetRepository {
       throw err;
     }
   }
+
+  async getTweets(userId: string) {
+    try {
+      const { following } = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          following: {
+            select: {
+              followerId: true,
+            },
+          },
+        },
+      });
+
+      const subscriptionsId = following.map((following) => {
+        return following.followerId;
+      });
+
+      return await this.prisma.tweet.findMany({
+        where: {
+          authorId: {
+            in: subscriptionsId,
+          },
+        },
+      });
+    } catch (err) {
+      throw err;
+    }
+  }
 }
