@@ -105,6 +105,7 @@ type TweetInteraction {
   userId: String!
 }
 
+"""The type of the tweet."""
 enum TweetType {
   """A fresh post"""
   PARENT

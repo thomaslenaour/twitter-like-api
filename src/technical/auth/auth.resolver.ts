@@ -7,7 +7,8 @@ import { AuthService } from './auth.service';
 import { LoginInput } from './dto/login.input';
 import { SignupInput } from './dto/signup.input';
 
-import { Public } from './public.decorator';
+import { Public } from './decorators/public.decorator';
+import { UserIp } from './decorators/ip.decorator';
 
 @Resolver(() => Token)
 export class AuthResolver {
@@ -15,9 +16,12 @@ export class AuthResolver {
 
   @Public()
   @Mutation(() => Token)
-  async signup(@Args('data') data: SignupInput) {
+  async signup(@Args('data') data: SignupInput, @UserIp() ip: string) {
     try {
-      return await this.authService.createUser(data, '127.0.0.1');
+      return await this.authService.createUser({
+        ...data,
+        ipAddress: ip,
+      });
     } catch (err) {
       throw err;
     }
@@ -25,13 +29,9 @@ export class AuthResolver {
 
   @Public()
   @Mutation(() => Token)
-  async login(@Args('data') data: LoginInput) {
+  async login(@Args('data') data: LoginInput, @UserIp() ip: string) {
     try {
-      return await this.authService.login(
-        data.emailOrPseudo,
-        data.password,
-        '127.0.0.1',
-      );
+      return await this.authService.login({ ...data, ipAddress: ip });
     } catch (err) {
       throw err;
     }
@@ -39,9 +39,9 @@ export class AuthResolver {
 
   @Public()
   @Mutation(() => Token)
-  async refreshToken(@Args('token') token: string) {
+  async refreshToken(@Args('token') token: string, @UserIp() ip: string) {
     try {
-      return await this.authService.refreshToken(token, '127.0.0.1');
+      return await this.authService.refreshToken(token, ip);
     } catch (err) {
       throw err;
     }

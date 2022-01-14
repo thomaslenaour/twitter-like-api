@@ -14,6 +14,8 @@ import { UserRepository } from '../../business/user/user.repository';
 import { JwtCreateToken } from './types/jwt.interface';
 import { SignupInput } from './dto/signup.input';
 import { SendgridService } from '../sendgrid/sendgrid.service';
+import { SignupDto } from './dto/signup.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +26,7 @@ export class AuthService {
     private sendgridService: SendgridService,
   ) {}
 
-  async createUser(data: SignupInput, ipAddress: string): Promise<Token> {
+  async createUser(data: SignupDto): Promise<Token> {
     const hashedPassword = await this.passwordService.hashPassword(
       data.password,
     );
@@ -41,7 +43,6 @@ export class AuthService {
         sub: createdUser.id,
       };
 
-      // Work Here
       await this.sendgridService.sendWelcomeMail({
         to: createdUser.email,
         subject: 'Twitter Like - Bienvenue parmis nous',
@@ -54,7 +55,7 @@ export class AuthService {
         accessToken: this.tokenService.generateAccessToken(payload),
         refreshToken: await this.tokenService.generateRefreshToken(
           payload,
-          ipAddress,
+          data.ipAddress,
         ),
       };
     } catch (err) {
@@ -62,13 +63,11 @@ export class AuthService {
     }
   }
 
-  async login(
-    emailOrPseudo: string,
-    password: string,
-    ipAddress: string,
-  ): Promise<Token> {
+  async login(data: LoginDto): Promise<Token> {
+    const { emailOrPseudo, password, ipAddress } = data;
+
     try {
-      const isEmail = emailOrPseudo.includes('@');
+      const isEmail = data.emailOrPseudo.includes('@');
       const user = await this.userRepository.getUser(
         isEmail ? 'email' : 'pseudo',
         isEmail ? emailOrPseudo.toLowerCase() : emailOrPseudo,

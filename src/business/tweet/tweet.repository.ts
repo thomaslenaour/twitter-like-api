@@ -6,7 +6,7 @@ import {
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 import { PrismaService } from 'src/technical/prisma/prisma.service';
-import { CreateTweetInput } from './dto/create-tweet.dto';
+import { CreateTweetInput } from './dto/create-tweet.input';
 
 @Injectable()
 export class TweetRepository {

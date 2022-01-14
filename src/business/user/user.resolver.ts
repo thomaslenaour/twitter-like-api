@@ -8,7 +8,7 @@ import {
   Parent,
 } from '@nestjs/graphql';
 
-import { Public } from 'src/technical/auth/public.decorator';
+import { Public } from 'src/technical/auth/decorators/public.decorator';
 import { FollowsService } from '../follows/follows.service';
 import { Follows } from '../follows/models/follows.model';
 

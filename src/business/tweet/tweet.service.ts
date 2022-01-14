@@ -3,12 +3,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+
 import { UserService } from '../user/user.service';
 
-import { CreateTweetInput } from './dto/create-tweet.dto';
-import { TweetType } from './model/tweet.model';
-import { TweetRepository } from './tweet.repository';
+import { BTweetType } from './model/tweet.model';
 
+import { CreateTweetDto } from './dto/create-tweet.dto';
+
+import { TweetRepository } from './tweet.repository';
 @Injectable()
 export class TweetService {
   constructor(
@@ -30,9 +32,9 @@ export class TweetService {
     return await this.tweetRepository.getTweets(userId);
   }
 
-  async createTweet(createTweetInput: CreateTweetInput) {
+  async createTweet(createTweetInput: CreateTweetDto) {
     if (
-      createTweetInput.type === TweetType.PARENT &&
+      createTweetInput.type === BTweetType.PARENT &&
       (createTweetInput.parentTweetId || createTweetInput.parentResponseId)
     ) {
       throw new BadRequestException(
@@ -42,10 +44,10 @@ export class TweetService {
 
     // A response tweet must have a parent Tweet Or a parent Response
     if (
-      (createTweetInput.type === TweetType.RESPONSE &&
+      (createTweetInput.type === BTweetType.RESPONSE &&
         !createTweetInput.parentTweetId &&
         !createTweetInput.parentResponseId) ||
-      (createTweetInput.type === TweetType.RESPONSE &&
+      (createTweetInput.type === BTweetType.RESPONSE &&
         createTweetInput.parentTweetId &&
         createTweetInput.parentResponseId)
     ) {

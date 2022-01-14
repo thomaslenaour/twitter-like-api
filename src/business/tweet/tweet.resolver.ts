@@ -13,7 +13,8 @@ import {
   AppAbility,
   CaslAbilityFactory,
 } from 'src/technical/casl/casl-ability.factory';
-import { TweetService } from './tweet.service';
+import { GqlAuthGuard } from 'src/technical/auth/guards/gql-auth.guard';
+import { PoliciesGuard } from 'src/technical/casl/policies.guard';
 
 import { Action } from 'src/technical/casl/types/casl.types';
 
@@ -21,12 +22,13 @@ import { CheckPolicies } from 'src/technical/casl/policy.decorator';
 import { CurrentUser } from '../user/user.decorator';
 import { JwtDecodedUser } from 'src/technical/auth/types/jwt.interface';
 
-import { CreateTweetInput } from './dto/create-tweet.dto';
-import { Tweet } from './model/tweet.model';
 import { User } from '../user/models/user.model';
+import { Tweet } from './model/tweet.model';
+
+import { CreateTweetInput } from './dto/create-tweet.input';
+
+import { TweetService } from './tweet.service';
 import { UserService } from '../user/user.service';
-import { GqlAuthGuard } from 'src/technical/auth/guards/gql-auth.guard';
-import { PoliciesGuard } from 'src/technical/casl/policies.guard';
 
 @Resolver(() => Tweet)
 export class TweetResolver {
@@ -82,8 +84,6 @@ export class TweetResolver {
 
   @ResolveField('author', () => User)
   async user(@Parent() tweet: Tweet) {
-    const { authorId } = tweet;
-
-    return await this.userService.getUser('id', authorId);
+    return await this.userService.getUser('id', tweet.authorId);
   }
 }

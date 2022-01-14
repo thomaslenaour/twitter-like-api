@@ -1,8 +1,25 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 
 import { User } from 'src/business/user/models/user.model';
-
 import { BaseModel } from 'src/technical/models/base-model';
+
+export enum BTweetType {
+  PARENT = 'PARENT',
+  RESPONSE = 'RESPONSE',
+}
+
+registerEnumType(BTweetType, {
+  name: 'TweetType',
+  description: 'The type of the tweet.',
+  valuesMap: {
+    PARENT: {
+      description: 'A fresh post',
+    },
+    RESPONSE: {
+      description: 'A response to a post or a response to a response',
+    },
+  },
+});
 
 @ObjectType()
 export class Tweet extends BaseModel {
@@ -15,8 +32,8 @@ export class Tweet extends BaseModel {
   @Field()
   authorId: string;
 
-  @Field(() => TweetType)
-  type: TweetType;
+  @Field(() => BTweetType)
+  type: BTweetType;
 
   @Field(() => Tweet, { nullable: true })
   parentTweet?: Tweet;
@@ -30,20 +47,3 @@ export class Tweet extends BaseModel {
   @Field(() => Tweet, { nullable: true })
   responseTweet?: Tweet;
 }
-
-export enum TweetType {
-  PARENT = 'PARENT',
-  RESPONSE = 'RESPONSE',
-}
-
-registerEnumType(TweetType, {
-  name: 'TweetType',
-  valuesMap: {
-    PARENT: {
-      description: 'A fresh post',
-    },
-    RESPONSE: {
-      description: 'A response to a post or a response to a response',
-    },
-  },
-});
