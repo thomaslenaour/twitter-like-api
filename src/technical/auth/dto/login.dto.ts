@@ -1,5 +1,3 @@
 import { LoginInput } from './login.input';
 
-export class LoginDto extends LoginInput {
-  ipAddress: string;
-}
+export class LoginDto extends LoginInput {}

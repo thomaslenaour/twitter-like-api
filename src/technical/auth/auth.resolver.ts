@@ -18,10 +18,7 @@ export class AuthResolver {
   @Mutation(() => Token)
   async signup(@Args('data') data: SignupInput, @UserIp() ip: string) {
     try {
-      return await this.authService.createUser({
-        ...data,
-        ipAddress: ip,
-      });
+      return await this.authService.createUser(data, ip);
     } catch (err) {
       throw err;
     }
@@ -31,7 +28,7 @@ export class AuthResolver {
   @Mutation(() => Token)
   async login(@Args('data') data: LoginInput, @UserIp() ip: string) {
     try {
-      return await this.authService.login({ ...data, ipAddress: ip });
+      return await this.authService.login(data, ip);
     } catch (err) {
       throw err;
     }

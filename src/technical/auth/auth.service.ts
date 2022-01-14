@@ -26,7 +26,7 @@ export class AuthService {
     private sendgridService: SendgridService,
   ) {}
 
-  async createUser(data: SignupDto): Promise<Token> {
+  async createUser(data: SignupDto, ipAddress: string): Promise<Token> {
     const hashedPassword = await this.passwordService.hashPassword(
       data.password,
     );
@@ -55,7 +55,7 @@ export class AuthService {
         accessToken: this.tokenService.generateAccessToken(payload),
         refreshToken: await this.tokenService.generateRefreshToken(
           payload,
-          data.ipAddress,
+          ipAddress,
         ),
       };
     } catch (err) {
@@ -63,8 +63,8 @@ export class AuthService {
     }
   }
 
-  async login(data: LoginDto): Promise<Token> {
-    const { emailOrPseudo, password, ipAddress } = data;
+  async login(data: LoginDto, ipAddress: string): Promise<Token> {
+    const { emailOrPseudo, password } = data;
 
     try {
       const isEmail = data.emailOrPseudo.includes('@');
