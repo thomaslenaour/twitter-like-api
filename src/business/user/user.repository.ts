@@ -20,6 +20,37 @@ export class UserRepository {
     }
   }
 
+  async searchUser(searchValue: string) {
+    try {
+      return await this.prisma.user.findMany({
+        where: {
+          OR: [
+            {
+              name: {
+                contains: searchValue,
+                mode: 'insensitive',
+              },
+            },
+            {
+              pseudo: {
+                contains: searchValue,
+                mode: 'insensitive',
+              },
+            },
+            {
+              description: {
+                contains: searchValue,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
+      });
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async createUser(data: CreateUserDto) {
     try {
       return await this.prisma.user.create({ data });
