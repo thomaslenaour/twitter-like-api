@@ -68,9 +68,16 @@ export class TweetResolver {
     }
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => Tweet)
   async getTweet(@Args('tweetId') tweetId: string) {
     return await this.tweetService.getTweet(tweetId);
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Query(() => [Tweet])
+  async getTweets(@CurrentUser() user: JwtDecodedUser) {
+    return await this.tweetService.getTweets(user.userId);
   }
 
   @ResolveField('author', () => User)
