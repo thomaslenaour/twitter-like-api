@@ -35,6 +35,11 @@ export class UserResolver {
     }
   }
 
+  @Query(() => [User])
+  async searchUser(@Args('searchValue') searchValue: string) {
+    return await this.userService.searchUser(searchValue);
+  }
+
   @Mutation(() => User)
   async updateUser(@Args('data') data: UpdateUserInput) {
     try {
