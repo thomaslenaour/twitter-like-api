@@ -12,7 +12,7 @@ export class UpdateUserInput {
   @IsString()
   @IsNotEmpty()
   @Field()
-  userId: string;
+  id: string;
 
   @IsString()
   @IsOptional()
@@ -34,10 +34,24 @@ export class UpdateUserInput {
   @Field({ nullable: true })
   phoneNumber?: string;
 
-  @IsEmail()
   @IsOptional()
   @Field({ nullable: true })
   websiteUrl?: string;
+
+  @IsString()
+  @IsOptional()
+  @Field({ nullable: true })
+  avatarUrl?: string;
+
+  @IsString()
+  @IsOptional()
+  @Field({ nullable: true })
+  bannerUrl?: string;
+
+  @IsString()
+  @IsOptional()
+  @Field({ nullable: true })
+  description?: string;
 
   @IsEmail()
   @IsOptional()

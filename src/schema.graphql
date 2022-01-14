@@ -115,12 +115,15 @@ enum TweetType {
 }
 
 input UpdateUserInput {
+  avatarUrl: String
+  bannerUrl: String
+  description: String
   email: String
+  id: String!
   location: String
   name: String
   phoneNumber: String
   pseudo: String
-  userId: String!
   websiteUrl: String
 }
 

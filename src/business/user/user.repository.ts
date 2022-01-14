@@ -37,15 +37,10 @@ export class UserRepository {
   async updateUser(data: UpdateUserDto) {
     try {
       return await this.prisma.user.update({
-        where: { id: data.userId },
+        where: { id: data.id },
         data,
       });
     } catch (err) {
-      if (err instanceof PrismaClientKnownRequestError) {
-        console.log('++++errr++++');
-        console.log(err);
-        console.log('++++errr++++');
-      }
       throw err;
     }
   }
