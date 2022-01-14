@@ -7,7 +7,10 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.use(helmet());
+  if (process.env.NODE_ENV === 'production') {
+    app.use(helmet());
+  }
+
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(3000);
