@@ -6,13 +6,13 @@ import {
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 import { PrismaService } from 'src/technical/prisma/prisma.service';
-import { CreateTweetInput } from './dto/create-tweet.input';
+import { CreateTweetDto } from './dto/create-tweet.dto';
 
 @Injectable()
 export class TweetRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createTweet(data: CreateTweetInput) {
+  async createTweet(data: CreateTweetDto) {
     try {
       return await this.prisma.tweet.create({ data });
     } catch (err) {

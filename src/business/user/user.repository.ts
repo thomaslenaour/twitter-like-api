@@ -3,6 +3,8 @@ import { Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 import { PrismaService } from 'src/technical/prisma/prisma.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserRepository {
@@ -18,7 +20,7 @@ export class UserRepository {
     }
   }
 
-  async createUser(data: Prisma.UserCreateInput) {
+  async createUser(data: CreateUserDto) {
     try {
       return await this.prisma.user.create({ data });
     } catch (err) {
@@ -32,9 +34,12 @@ export class UserRepository {
     }
   }
 
-  async updateUser(userId: string, data: Prisma.UserUpdateInput) {
+  async updateUser(data: UpdateUserDto) {
     try {
-      return await this.prisma.user.update({ where: { id: userId }, data });
+      return await this.prisma.user.update({
+        where: { id: data.userId },
+        data,
+      });
     } catch (err) {
       if (err instanceof PrismaClientKnownRequestError) {
         console.log('++++errr++++');

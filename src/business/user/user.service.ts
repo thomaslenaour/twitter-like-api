@@ -35,8 +35,6 @@ export class UserService {
   }
 
   async updateUser(data: UpdateUserDto) {
-    const { userId, ...newData } = data;
-
-    return this.userRepository.updateUser(userId, newData);
+    return this.userRepository.updateUser(data);
   }
 }
