@@ -13,6 +13,7 @@ import { TokenRepository } from './repositories/token.repository';
 import { UserRepository } from 'src/business/user/user.repository';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
+import { SendgridService } from '../sendgrid/sendgrid.service';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { GqlAuthGuard } from './guards/gql-auth.guard';
     UserRepository,
     JwtStrategy,
     GqlAuthGuard,
+    SendgridService,
   ],
 })
 export class AuthModule {}

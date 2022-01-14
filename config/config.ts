@@ -42,4 +42,13 @@ export default (): Config => ({
       models: ['user', 'tweet', 'follows'],
     },
   },
+  services: {
+    sendgrid: {
+      apiKey: process.env.SENDGRID_API_KEY,
+      sendgridTemplateIds: {
+        welcome: 'd-4715d40bbce64d2fa580d50071ebc3b5',
+      },
+      from: 'twitter-like-api@thomaslenaour.com',
+    },
+  },
 });

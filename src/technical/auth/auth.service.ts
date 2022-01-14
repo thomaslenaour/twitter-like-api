@@ -13,6 +13,7 @@ import { UserRepository } from '../../business/user/user.repository';
 
 import { JwtCreateToken } from './types/jwt.interface';
 import { SignupInput } from './dto/signup.input';
+import { SendgridService } from '../sendgrid/sendgrid.service';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
     private userRepository: UserRepository,
     private passwordService: PasswordService,
     private tokenService: TokenService,
+    private sendgridService: SendgridService,
   ) {}
 
   async createUser(data: SignupInput, ipAddress: string): Promise<Token> {
@@ -38,6 +40,15 @@ export class AuthService {
         pseudo: createdUser.pseudo,
         sub: createdUser.id,
       };
+
+      // Work Here
+      await this.sendgridService.sendWelcomeMail({
+        to: createdUser.email,
+        subject: 'Twitter Like - Bienvenue parmis nous',
+        dynamicTemplateData: {
+          first_name: createdUser.name,
+        },
+      });
 
       return {
         accessToken: this.tokenService.generateAccessToken(payload),

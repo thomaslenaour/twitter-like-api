@@ -5,6 +5,7 @@ export interface Config {
   graphql: GqlModuleOptions;
   auth: AuthConfig;
   database: DatabaseConfig;
+  services: ServicesConfig;
 }
 
 export interface DatabaseConfig {
@@ -29,4 +30,18 @@ export interface JwtConfig {
     expiresIn: string;
     refreshIn: string;
   };
+}
+
+export interface ServicesConfig {
+  sendgrid: SendgridConfig;
+}
+
+export interface SendgridConfig {
+  apiKey: string;
+  sendgridTemplateIds: SendgridTemplates;
+  from: string;
+}
+
+export interface SendgridTemplates {
+  [key: string]: string;
 }

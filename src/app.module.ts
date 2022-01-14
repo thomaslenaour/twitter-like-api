@@ -13,6 +13,7 @@ import { GqlAuthGuard } from './technical/auth/guards/gql-auth.guard';
 import { PrismaModule } from './technical/prisma/prisma.module';
 import { FollowsModule } from './business/follows/follows.module';
 import { TweetInteractionModule } from './business/tweetInteraction/tweetInteraction.module';
+import { SendgridModule } from './technical/sendgrid/sendgrid.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { TweetInteractionModule } from './business/tweetInteraction/tweetInterac
     TweetModule,
     FollowsModule,
     TweetInteractionModule,
+    SendgridModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: GqlAuthGuard }],
 })
