@@ -32,6 +32,7 @@ model User {
   refreshTokens     RefreshToken[]
   followers         Follows[]          @relation("follower")
   following         Follows[]          @relation("following")
+  CenterOfInterests CenterOfInterest[]
 }
 
 model RefreshToken {
@@ -89,6 +90,13 @@ model TweetInteraction {
   userId    String
 
   @@id([tweetId, userId, type])
+}
+
+model CenterOfInterest {
+  id    String @id @default(cuid())
+  name  String
+  kind  String @default("CenterOfInterest")
+  users User[]
 }
 
 enum UserRole {
