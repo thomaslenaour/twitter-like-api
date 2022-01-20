@@ -14,6 +14,7 @@ import { UserRepository } from 'src/business/user/user.repository';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
 import { SendgridService } from '../sendgrid/sendgrid.service';
+import { UserService } from 'src/business/user/user.service';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { SendgridService } from '../sendgrid/sendgrid.service';
   providers: [
     AuthResolver,
     AuthService,
+    UserService,
     PasswordService,
     TokenService,
     TokenRepository,

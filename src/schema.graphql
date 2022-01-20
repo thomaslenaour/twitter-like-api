@@ -42,10 +42,10 @@ type Mutation {
   createTweet(data: CreateTweetInput!): Tweet!
   follow(userId: String!): Follows!
   interact(data: CreateTweetInteractionInput!): TweetInteraction!
-  login(data: LoginInput!): Token!
+  login(data: LoginInput!): TokenWithUser!
   refreshToken(token: String!): Token!
   removeTweet(tweetId: String!): Tweet!
-  signup(data: SignupInput!): Token!
+  signup(data: SignupInput!): TokenWithUser!
   unfollow(userId: String!): Follows!
   updateUser(data: UpdateUserInput!): User!
 }
@@ -71,6 +71,16 @@ type Token {
 
   """Identifies the JWT refresh token."""
   refreshToken: String
+}
+
+type TokenWithUser {
+  """Identifies the JWT access token."""
+  accessToken: String!
+
+  """Identifies the JWT refresh token."""
+  refreshToken: String
+  user: User!
+  userId: String!
 }
 
 type Tweet {
