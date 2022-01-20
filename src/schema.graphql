@@ -51,6 +51,7 @@ type Mutation {
 }
 
 type Query {
+  getCentersOfInterest: Boolean!
   getTweet(tweetId: String!): Tweet!
   getTweets: [Tweet!]!
   user(userId: String!): User!
