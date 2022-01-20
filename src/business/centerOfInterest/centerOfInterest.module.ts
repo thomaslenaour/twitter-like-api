@@ -10,4 +10,4 @@ import { CenterOfInterestService } from './centerOfInterest.service';
     CenterOfInterestResolver,
   ],
 })
-export class CenterOfInterest {}
+export class CenterOfInterestModule {}

@@ -1,17 +1,17 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { CenterOfInterest } from './centerOfInterest.module';
 import { CenterOfInterestService } from './centerOfInterest.service';
 
-@Resolver(CenterOfInterest)
+import { CenterOfInterest } from './model/centerOfInterest.model';
+
+@Resolver(() => CenterOfInterest)
 export class CenterOfInterestResolver {
   constructor(private centerOfInterestService: CenterOfInterestService) {}
 
-  @Query(() => Boolean)
+  @Query(() => [CenterOfInterest])
   async getCentersOfInterest() {
     const centersOfInterest =
       await this.centerOfInterestService.getCentersOfInterest();
-    console.log(centersOfInterest);
 
-    return true;
+    return centersOfInterest;
   }
 }
