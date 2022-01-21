@@ -1,0 +1,189 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+enum BTweetInteractionType {
+  LIKE
+  RETWEET
+}
+
+type CenterOfInterest {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Identifies the ID of the object (always unique)."""
+  id: String!
+  name: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+input CreateTweetInput {
+  authorId: String!
+  content: String!
+  parentResponseTweetId: String
+  parentTweetId: String
+  type: TweetType!
+}
+
+input CreateTweetInteractionInput {
+  tweetId: String!
+  type: BTweetInteractionType!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Follows {
+  follower: User!
+  followerId: String!
+  following: User!
+  followingId: String!
+  isBlocked: Boolean!
+}
+
+input LoginInput {
+  emailOrPseudo: String!
+  password: String!
+}
+
+type Mutation {
+  createTweet(data: CreateTweetInput!): Tweet!
+  follow(userId: String!): Follows!
+  interact(data: CreateTweetInteractionInput!): TweetInteraction!
+  login(data: LoginInput!): TokenWithUser!
+  refreshToken(token: String!): Token!
+  removeTweet(tweetId: String!): Tweet!
+  signup(data: SignupInput!): TokenWithUser!
+  unfollow(userId: String!): Follows!
+  updateUser(data: UpdateUserInput!): User!
+}
+
+type Query {
+  getCenterOfInterest(centerOfInterestId: String!): CenterOfInterest!
+  getCentersOfInterest: [CenterOfInterest!]!
+  getCompatibleUsersList: [User!]!
+  getTweet(tweetId: String!): Tweet!
+  getTweets(filter: String, skip: Int, take: Int): [Tweet!]!
+  searchUser(searchValue: String!): [User!]!
+  user(userId: String!): User!
+}
+
+input SignupInput {
+  birthDate: DateTime!
+  email: String!
+  name: String!
+  password: String!
+  pseudo: String!
+}
+
+type Token {
+  """Identifies the JWT access token."""
+  accessToken: String!
+
+  """Identifies the JWT refresh token."""
+  refreshToken: String
+}
+
+type TokenWithUser {
+  """Identifies the JWT access token."""
+  accessToken: String!
+
+  """Identifies the JWT refresh token."""
+  refreshToken: String
+  user: User!
+  userId: String!
+}
+
+type Tweet {
+  author: User!
+  authorId: String!
+  content: String!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Identifies the ID of the object (always unique)."""
+  id: String!
+  interactions: [TweetInteraction!]!
+  parentResponseTweet: Tweet
+  parentResponseTweetId: String
+  parentTweet: Tweet
+  parentTweetId: String
+  responseResponseTweets: [Tweet!]!
+  responseTweets: [Tweet!]!
+  type: TweetType!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
+type TweetInteraction {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  tweet: Tweet!
+  tweetId: String!
+  type: BTweetInteractionType!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+"""The type of the tweet."""
+enum TweetType {
+  """A fresh post"""
+  PARENT
+
+  """A response to a post or a response to a response"""
+  RESPONSE
+}
+
+input UpdateUserInput {
+  avatarUrl: String
+  bannerUrl: String
+  description: String
+  email: String
+  id: String!
+  location: String
+  name: String
+  phoneNumber: String
+  pseudo: String
+  websiteUrl: String
+}
+
+type User {
+  avatarUrl: String
+  bannerUrl: String
+  birthDate: DateTime!
+  centersOfInterest: [CenterOfInterest!]!
+
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+  description: String
+  email: String!
+  followers: [Follows!]!
+  following: [Follows!]!
+
+  """Identifies the ID of the object (always unique)."""
+  id: String!
+  location: String
+  name: String!
+  phoneNumber: String
+  pseudo: String!
+  role: UserRole!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+  websiteUrl: String
+}
+
+enum UserRole {
+  ADMIN
+  MODERATOR
+  USER
+}

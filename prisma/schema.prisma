@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String             @id @default(cuid())
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  kind              String             @default("User")
+  name              String
+  pseudo            String             @unique
+  email             String             @unique
+  password          String
+  birthDate         DateTime
+  description       String?
+  phoneNumber       String?
+  avatarUrl         String?
+  bannerUrl         String?
+  websiteUrl        String?
+  location          String?
+  role              UserRole           @default(USER)
+  tweets            Tweet[]
+  tweetInteractions TweetInteraction[]
+  refreshTokens     RefreshToken[]
+  followers         Follows[]          @relation("follower")
+  following         Follows[]          @relation("following")
+  centerOfInterests CenterOfInterest[]
+}
+
+model RefreshToken {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  kind           String   @default("RefreshToken")
+  user           User     @relation(fields: [userId], references: [id])
+  userId         String
+  jti            String   @unique
+  isRevoked      Boolean  @default(false)
+  expirationDate DateTime
+  ipAddress      String
+}
+
+model Follows {
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  kind        String   @default("Follows")
+  follower    User     @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User     @relation("following", fields: [followingId], references: [id])
+  followingId String
+  isBlocked   Boolean  @default(false)
+
+  @@id([followerId, followingId])
+}
+
+model Tweet {
+  id                     String             @id @default(cuid())
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  kind                   String             @default("Tweet")
+  content                String             @db.VarChar(280)
+  author                 User               @relation(fields: [authorId], references: [id])
+  authorId               String
+  type                   TweetType          @default(PARENT)
+  parentTweetId          String?
+  parentTweet            Tweet?             @relation("ParentTweetResponsesTweet", fields: [parentTweetId], references: [id])
+  responseTweets         Tweet[]            @relation("ParentTweetResponsesTweet")
+  parentResponseTweetId  String?
+  parentResponseTweet    Tweet?             @relation("ResponseToResponse", fields: [parentResponseTweetId], references: [id])
+  responseResponseTweets Tweet[]            @relation("ResponseToResponse")
+  interactions           TweetInteraction[]
+}
+
+model TweetInteraction {
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  kind      String               @default("TweetInteraction")
+  type      TweetInteractionType
+  tweet     Tweet                @relation(fields: [tweetId], references: [id])
+  tweetId   String
+  user      User                 @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@id([tweetId, userId, type])
+}
+
+model CenterOfInterest {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+  kind      String   @default("CenterOfInterest")
+  users     User[]
+}
+
+enum UserRole {
+  ADMIN
+  MODERATOR
+  USER
+}
+
+enum TweetType {
+  PARENT
+  RESPONSE
+}
+
+enum TweetInteractionType {
+  RETWEET
+  LIKE
+}
