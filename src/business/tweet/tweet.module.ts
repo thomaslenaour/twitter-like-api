@@ -5,6 +5,8 @@ import { UserService } from '../user/user.service';
 import { TweetRepository } from './tweet.repository';
 import { TweetResolver } from './tweet.resolver';
 import { TweetService } from './tweet.service';
+import { TweetInteractionRepository } from '../tweetInteraction/tweetInteraction.repository';
+import { TweetInteractionService } from '../tweetInteraction/tweetInteraction.service';
 
 @Module({
   providers: [
@@ -13,6 +15,8 @@ import { TweetService } from './tweet.service';
     TweetResolver,
     UserService,
     UserRepository,
+    TweetInteractionService,
+    TweetInteractionRepository,
   ],
 })
 export class TweetModule {}

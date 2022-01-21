@@ -10,7 +10,7 @@ enum BTweetInteractionType {
 input CreateTweetInput {
   authorId: String!
   content: String!
-  parentResponseId: String
+  parentResponseTweetId: String
   parentTweetId: String
   type: TweetType!
 }
@@ -52,7 +52,7 @@ type Mutation {
 
 type Query {
   getTweet(tweetId: String!): Tweet!
-  getTweets: [Tweet!]!
+  getTweets(filter: String, skip: Int, take: Int): [Tweet!]!
   searchUser(searchValue: String!): [User!]!
   user(userId: String!): User!
 }
@@ -93,10 +93,13 @@ type Tweet {
 
   """Identifies the ID of the object (always unique)."""
   id: String!
+  interactions: [TweetInteraction!]!
   parentResponseTweet: Tweet
+  parentResponseTweetId: String
   parentTweet: Tweet
-  responseTweet: Tweet
-  responsesTweet: [Tweet!]!
+  parentTweetId: String
+  responseResponseTweets: [Tweet!]!
+  responseTweets: [Tweet!]!
   type: TweetType!
 
   """Identifies the date and time when the object was last updated."""

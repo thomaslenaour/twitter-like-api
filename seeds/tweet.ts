@@ -29,8 +29,8 @@ export const tweet: Prisma.TweetCreateManyInput[] = [
     id: 'cky4f8u5r000008l307ab76st',
     content: "Oui l'histoire est vraiment bien",
     authorId: 'cjld2cjxh0000qzrmn831i7rn',
-    type: 'RESPONSE_TO_RESPONSE',
-    parentResponseId: 'cky4exexs000509ml8r0qhrlj',
+    type: 'RESPONSE',
+    parentResponseTweetId: 'cky4exexs000509ml8r0qhrlj',
     createdAt: chance.date(),
   },
   {
@@ -50,8 +50,8 @@ export const tweet: Prisma.TweetCreateManyInput[] = [
   {
     id: 'cky4fkz7g000208me1lrghbu9',
     content: 'Je préfère Android perso',
-    type: 'RESPONSE_TO_RESPONSE',
-    parentResponseId: 'cky4fixeo000108me17a7hguj',
+    type: 'RESPONSE',
+    parentResponseTweetId: 'cky4fixeo000108me17a7hguj',
     authorId: 'cky4c3mvy000108jw6f7k8zry',
     createdAt: chance.date(),
   },

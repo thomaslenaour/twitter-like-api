@@ -35,5 +35,5 @@ export class CreateTweetInput {
 
   @IsOptional()
   @Field({ nullable: true })
-  parentResponseId?: string;
+  parentResponseTweetId?: string;
 }

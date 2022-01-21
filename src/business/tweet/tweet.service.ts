@@ -11,6 +11,7 @@ import { BTweetType } from './model/tweet.model';
 import { CreateTweetDto } from './dto/create-tweet.dto';
 
 import { TweetRepository } from './tweet.repository';
+import { GetTweetsDto } from './dto/get-tweets.dto';
 @Injectable()
 export class TweetService {
   constructor(
@@ -28,14 +29,24 @@ export class TweetService {
     return tweet;
   }
 
-  async getTweets(userId: string) {
-    return await this.tweetRepository.getTweets(userId);
+  async getTweetsByUser(userId: string, args: GetTweetsDto) {
+    return await this.tweetRepository.getParentTweets(userId, args);
+  }
+
+  async getResponseTweets(parentTweetId: string) {
+    return await this.tweetRepository.getResponseTweets(parentTweetId);
+  }
+
+  async getResponseResponseTweets(parentResponseTweetId: string) {
+    return await this.tweetRepository.getResponseResponseTweets(
+      parentResponseTweetId,
+    );
   }
 
   async createTweet(createTweetInput: CreateTweetDto) {
     if (
       createTweetInput.type === BTweetType.PARENT &&
-      (createTweetInput.parentTweetId || createTweetInput.parentResponseId)
+      (createTweetInput.parentTweetId || createTweetInput.parentResponseTweetId)
     ) {
       throw new BadRequestException(
         "A new tweet can't be a response to a tweet or a reponse to another response.",
@@ -43,17 +54,28 @@ export class TweetService {
     }
 
     // A response tweet must have a parent Tweet Or a parent Response
-    if (
-      (createTweetInput.type === BTweetType.RESPONSE &&
-        !createTweetInput.parentTweetId &&
-        !createTweetInput.parentResponseId) ||
-      (createTweetInput.type === BTweetType.RESPONSE &&
-        createTweetInput.parentTweetId &&
-        createTweetInput.parentResponseId)
-    ) {
-      throw new BadRequestException(
-        'A response must have a parentTweetId or a parentResponseId.',
-      );
+    if (createTweetInput.type === BTweetType.RESPONSE) {
+      if (
+        (!createTweetInput.parentTweetId &&
+          !createTweetInput.parentResponseTweetId) ||
+        (createTweetInput.parentTweetId &&
+          createTweetInput.parentResponseTweetId)
+      ) {
+        throw new BadRequestException(
+          'A response must have a parentTweetId or a parentResponseTweetId.',
+        );
+      }
+
+      // TODO
+      if (createTweetInput.parentResponseTweetId) {
+        const { parentResponseTweetId } = await this.getTweet(
+          createTweetInput.parentResponseTweetId,
+        );
+
+        if (parentResponseTweetId) {
+          createTweetInput.parentResponseTweetId = parentResponseTweetId;
+        }
+      }
     }
 
     try {

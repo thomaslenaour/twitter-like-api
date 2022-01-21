@@ -1,8 +1,11 @@
 -- CreateEnum
-CREATE TYPE "TweetType" AS ENUM ('PARENT', 'RESPONSE', 'RESPONSE_TO_RESPONSE');
+CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'MODERATOR', 'USER');
 
 -- CreateEnum
-CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'MODERATOR', 'USER');
+CREATE TYPE "TweetType" AS ENUM ('PARENT', 'RESPONSE');
+
+-- CreateEnum
+CREATE TYPE "TweetInteractionType" AS ENUM ('RETWEET', 'LIKE');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -27,6 +30,21 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "RefreshToken" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "kind" TEXT NOT NULL DEFAULT E'RefreshToken',
+    "userId" TEXT NOT NULL,
+    "jti" TEXT NOT NULL,
+    "isRevoked" BOOLEAN NOT NULL DEFAULT false,
+    "expirationDate" TIMESTAMP(3) NOT NULL,
+    "ipAddress" TEXT NOT NULL,
+
+    CONSTRAINT "RefreshToken_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Follows" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -48,24 +66,21 @@ CREATE TABLE "Tweet" (
     "authorId" TEXT NOT NULL,
     "type" "TweetType" NOT NULL DEFAULT E'PARENT',
     "parentTweetId" TEXT,
-    "parentResponseId" TEXT,
+    "parentResponseTweetId" TEXT,
 
     CONSTRAINT "Tweet_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "RefreshToken" (
-    "id" TEXT NOT NULL,
+CREATE TABLE "TweetInteraction" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "kind" TEXT NOT NULL DEFAULT E'RefreshToken',
+    "kind" TEXT NOT NULL DEFAULT E'TweetInteraction',
+    "type" "TweetInteractionType" NOT NULL,
+    "tweetId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "jti" TEXT NOT NULL,
-    "isRevoked" BOOLEAN NOT NULL DEFAULT false,
-    "expirationDate" TIMESTAMP(3) NOT NULL,
-    "ipAddress" TEXT NOT NULL,
 
-    CONSTRAINT "RefreshToken_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "TweetInteraction_pkey" PRIMARY KEY ("tweetId","userId","type")
 );
 
 -- CreateIndex
@@ -75,10 +90,10 @@ CREATE UNIQUE INDEX "User_pseudo_key" ON "User"("pseudo");
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Tweet_parentResponseId_key" ON "Tweet"("parentResponseId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "RefreshToken_jti_key" ON "RefreshToken"("jti");
+
+-- AddForeignKey
+ALTER TABLE "RefreshToken" ADD CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Follows" ADD CONSTRAINT "Follows_followerId_fkey" FOREIGN KEY ("followerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -93,7 +108,10 @@ ALTER TABLE "Tweet" ADD CONSTRAINT "Tweet_authorId_fkey" FOREIGN KEY ("authorId"
 ALTER TABLE "Tweet" ADD CONSTRAINT "Tweet_parentTweetId_fkey" FOREIGN KEY ("parentTweetId") REFERENCES "Tweet"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Tweet" ADD CONSTRAINT "Tweet_parentResponseId_fkey" FOREIGN KEY ("parentResponseId") REFERENCES "Tweet"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Tweet" ADD CONSTRAINT "Tweet_parentResponseTweetId_fkey" FOREIGN KEY ("parentResponseTweetId") REFERENCES "Tweet"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RefreshToken" ADD CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "TweetInteraction" ADD CONSTRAINT "TweetInteraction_tweetId_fkey" FOREIGN KEY ("tweetId") REFERENCES "Tweet"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TweetInteraction" ADD CONSTRAINT "TweetInteraction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
