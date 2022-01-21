@@ -7,6 +7,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 import { PrismaService } from 'src/technical/prisma/prisma.service';
 import { CreateTweetDto } from './dto/create-tweet.dto';
+import { GetTweetsDto } from './dto/get-tweets.dto';
 
 @Injectable()
 export class TweetRepository {
@@ -60,7 +61,31 @@ export class TweetRepository {
     }
   }
 
-  async getTweets(userId: string) {
+  async getResponseTweets(parentTweetId: string) {
+    try {
+      return await this.prisma.tweet.findMany({
+        where: {
+          parentTweetId,
+        },
+      });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getResponseResponseTweets(parentResponseTweetId: string) {
+    try {
+      return await this.prisma.tweet.findMany({
+        where: {
+          parentResponseTweetId,
+        },
+      });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getParentTweets(userId: string, args: GetTweetsDto) {
     try {
       const { following } = await this.prisma.user.findUnique({
         where: { id: userId },
@@ -82,14 +107,15 @@ export class TweetRepository {
           authorId: {
             in: subscriptionsId,
           },
+          type: 'PARENT',
+          ...(args.filter && {
+            content: { contains: args.filter, mode: 'insensitive' },
+          }),
         },
         orderBy: {
           createdAt: 'desc',
         },
-        include: {
-          parentResponseTweet: true,
-          parentTweet: true,
-        },
+        ...(args.skip && args.take && { skip: args.skip, take: args.take }),
       });
     } catch (err) {
       throw err;

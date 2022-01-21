@@ -29,6 +29,9 @@ import { CreateTweetInput } from './dto/create-tweet.input';
 
 import { TweetService } from './tweet.service';
 import { UserService } from '../user/user.service';
+import { GetTweetsArgs as GetTweetsArgs } from './dto/get-tweets.args';
+import { TweetInteraction } from '../tweetInteraction/model/tweetInteraction.model';
+import { TweetInteractionService } from '../tweetInteraction/tweetInteraction.service';
 
 @Resolver(() => Tweet)
 export class TweetResolver {
@@ -36,6 +39,7 @@ export class TweetResolver {
     private tweetService: TweetService,
     private caslAbilityFactory: CaslAbilityFactory,
     private userService: UserService,
+    private tweetInteractionService: TweetInteractionService,
   ) {}
 
   @UseGuards(GqlAuthGuard, PoliciesGuard)
@@ -78,12 +82,44 @@ export class TweetResolver {
 
   @UseGuards(GqlAuthGuard)
   @Query(() => [Tweet])
-  async getTweets(@CurrentUser() user: JwtDecodedUser) {
-    return await this.tweetService.getTweets(user.userId);
+  async getTweets(
+    @Args() args: GetTweetsArgs,
+    @CurrentUser() user: JwtDecodedUser,
+  ) {
+    return await this.tweetService.getTweetsByUser(user.userId, args);
   }
 
   @ResolveField('author', () => User)
   async user(@Parent() tweet: Tweet) {
     return await this.userService.getUser('id', tweet.authorId);
+  }
+
+  @ResolveField('parentTweet', () => Tweet, { nullable: true })
+  async parentTweet(@Parent() tweet: Tweet) {
+    if (!tweet.parentTweetId) return null;
+
+    return await this.tweetService.getTweet(tweet.parentTweetId);
+  }
+
+  @ResolveField('responseTweets', () => [Tweet])
+  async responseTweets(@Parent() tweet: Tweet) {
+    return await this.tweetService.getResponseTweets(tweet.id);
+  }
+
+  @ResolveField('parentResponseTweet', () => Tweet, { nullable: true })
+  async parentResponseTweet(@Parent() tweet: Tweet) {
+    if (!tweet.parentResponseTweetId) return null;
+
+    return await this.tweetService.getTweet(tweet.parentResponseTweetId);
+  }
+
+  @ResolveField('responseResponseTweets', () => [Tweet])
+  async responseResponseTweets(@Parent() tweet: Tweet) {
+    return await this.tweetService.getResponseResponseTweets(tweet.id);
+  }
+
+  @ResolveField('interactions', () => [TweetInteraction])
+  async interactions(@Parent() tweet: Tweet) {
+    return await this.tweetInteractionService.getTweetInteractions(tweet.id);
   }
 }

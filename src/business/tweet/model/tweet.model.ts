@@ -1,4 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { TweetInteraction } from 'src/business/tweetInteraction/model/tweetInteraction.model';
 
 import { User } from 'src/business/user/models/user.model';
 import { BaseModel } from 'src/technical/models/base-model';
@@ -35,15 +36,24 @@ export class Tweet extends BaseModel {
   @Field(() => BTweetType)
   type: BTweetType;
 
+  @Field({ nullable: true })
+  parentTweetId?: string;
+
   @Field(() => Tweet, { nullable: true })
   parentTweet?: Tweet;
 
   @Field(() => [Tweet])
-  responsesTweet: Array<Tweet>;
+  responseTweets: Tweet[];
+
+  @Field({ nullable: true })
+  parentResponseTweetId?: string;
 
   @Field(() => Tweet, { nullable: true })
   parentResponseTweet?: Tweet;
 
-  @Field(() => Tweet, { nullable: true })
-  responseTweet?: Tweet;
+  @Field(() => [Tweet])
+  responseResponseTweets: Tweet[];
+
+  @Field(() => [TweetInteraction])
+  interactions: TweetInteraction[];
 }

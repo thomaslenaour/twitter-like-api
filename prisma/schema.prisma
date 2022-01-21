@@ -62,21 +62,21 @@ model Follows {
 }
 
 model Tweet {
-  id                  String             @id @default(cuid())
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
-  kind                String             @default("Tweet")
-  content             String             @db.VarChar(280)
-  author              User               @relation(fields: [authorId], references: [id])
-  authorId            String
-  type                TweetType          @default(PARENT)
-  parentTweetId       String?
-  parentTweet         Tweet?             @relation("ParentTweetResponsesTweet", fields: [parentTweetId], references: [id])
-  responsesTweet      Tweet[]            @relation("ParentTweetResponsesTweet")
-  parentResponseId    String?            @unique
-  parentResponseTweet Tweet?             @relation("ResponseToResponse", fields: [parentResponseId], references: [id])
-  responseTweet       Tweet?             @relation("ResponseToResponse")
-  interactions        TweetInteraction[]
+  id                     String             @id @default(cuid())
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  kind                   String             @default("Tweet")
+  content                String             @db.VarChar(280)
+  author                 User               @relation(fields: [authorId], references: [id])
+  authorId               String
+  type                   TweetType          @default(PARENT)
+  parentTweetId          String?
+  parentTweet            Tweet?             @relation("ParentTweetResponsesTweet", fields: [parentTweetId], references: [id])
+  responseTweets         Tweet[]            @relation("ParentTweetResponsesTweet")
+  parentResponseTweetId  String?
+  parentResponseTweet    Tweet?             @relation("ResponseToResponse", fields: [parentResponseTweetId], references: [id])
+  responseResponseTweets Tweet[]            @relation("ResponseToResponse")
+  interactions           TweetInteraction[]
 }
 
 model TweetInteraction {
@@ -110,7 +110,6 @@ enum UserRole {
 enum TweetType {
   PARENT
   RESPONSE
-  RESPONSE_TO_RESPONSE
 }
 
 enum TweetInteractionType {

@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Token } from './models/token.model';
+import { Token, TokenWithUser } from './models/token.model';
 
 import { PasswordService } from './services/password.service';
 import { TokenService } from './services/token.service';
@@ -12,7 +12,7 @@ import { TokenService } from './services/token.service';
 import { UserRepository } from '../../business/user/user.repository';
 
 import { JwtCreateToken } from './types/jwt.interface';
-import { SignupInput } from './dto/signup.input';
+
 import { SendgridService } from '../sendgrid/sendgrid.service';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
@@ -26,7 +26,10 @@ export class AuthService {
     private sendgridService: SendgridService,
   ) {}
 
-  async createUser(data: SignupDto, ipAddress: string): Promise<Token> {
+  async createUser(
+    data: SignupDto,
+    ipAddress: string,
+  ): Promise<Omit<TokenWithUser, 'user'>> {
     const hashedPassword = await this.passwordService.hashPassword(
       data.password,
     );
@@ -57,13 +60,17 @@ export class AuthService {
           payload,
           ipAddress,
         ),
+        userId: createdUser.id,
       };
     } catch (err) {
       throw err;
     }
   }
 
-  async login(data: LoginDto, ipAddress: string): Promise<Token> {
+  async login(
+    data: LoginDto,
+    ipAddress: string,
+  ): Promise<Omit<TokenWithUser, 'user'>> {
     const { emailOrPseudo, password } = data;
 
     try {
@@ -97,13 +104,14 @@ export class AuthService {
           payload,
           ipAddress,
         ),
+        userId: user.id,
       };
     } catch (err) {
       throw err;
     }
   }
 
-  async refreshToken(refreshToken: string, ipAddress: string) {
+  async refreshToken(refreshToken: string, ipAddress: string): Promise<Token> {
     try {
       const { pseudo, sub, jti } =
         this.tokenService.verifyRefreshToken(refreshToken);

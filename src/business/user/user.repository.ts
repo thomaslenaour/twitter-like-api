@@ -4,6 +4,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { JwtDecodedUser } from 'src/technical/auth/types/jwt.interface';
 
 import { PrismaService } from 'src/technical/prisma/prisma.service';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -15,6 +16,37 @@ export class UserRepository {
     try {
       return await this.prisma.user.findUnique({
         where: { [where]: value },
+      });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async searchUser(searchValue: string) {
+    try {
+      return await this.prisma.user.findMany({
+        where: {
+          OR: [
+            {
+              name: {
+                contains: searchValue,
+                mode: 'insensitive',
+              },
+            },
+            {
+              pseudo: {
+                contains: searchValue,
+                mode: 'insensitive',
+              },
+            },
+            {
+              description: {
+                contains: searchValue,
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
       });
     } catch (err) {
       throw err;
@@ -38,15 +70,10 @@ export class UserRepository {
   async updateUser(data: UpdateUserDto) {
     try {
       return await this.prisma.user.update({
-        where: { id: data.userId },
+        where: { id: data.id },
         data,
       });
     } catch (err) {
-      if (err instanceof PrismaClientKnownRequestError) {
-        console.log('++++errr++++');
-        console.log(err);
-        console.log('++++errr++++');
-      }
       throw err;
     }
   }

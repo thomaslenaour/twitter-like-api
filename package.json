@@ -18,12 +18,13 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./jest-e2e.json",
     "docker:db": "docker-compose -f docker-compose.yml up -d",
     "prisma:format": "npx prisma format",
     "prisma:generate": "npm run prisma:format && npx prisma generate",
     "prisma:migrate:dev": "npx prisma migrate dev",
     "prisma:migrate:deploy": "npx prisma migrate deploy",
+    "prisma:migrate:reset": "npx prisma migrate reset",
     "db:seed": "npx prisma db seed"
   },
   "prisma": {
@@ -41,6 +42,8 @@
     "@nestjs/platform-express": "^8.0.0",
     "@prisma/client": "^3.6.0",
     "@sendgrid/mail": "^7.6.0",
+    "@sentry/node": "^6.16.1",
+    "@sentry/tracing": "^6.16.1",
     "apollo-server-express": "^3.5.0",
     "bcrypt": "^5.0.1",
     "chance": "^1.1.8",
@@ -89,6 +92,10 @@
       "js",
       "json",
       "ts"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "src"
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",

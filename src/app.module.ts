@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import config from '../config/config';
@@ -15,6 +15,7 @@ import { FollowsModule } from './business/follows/follows.module';
 import { TweetInteractionModule } from './business/tweetInteraction/tweetInteraction.module';
 import { SendgridModule } from './technical/sendgrid/sendgrid.module';
 import { CenterOfInterestModule } from './business/centerOfInterest/centerOfInterest.module';
+import { SentryInterceptor } from './technical/sentry/sentry.interceptor';
 
 @Module({
   imports: [
@@ -41,6 +42,9 @@ import { CenterOfInterestModule } from './business/centerOfInterest/centerOfInte
     SendgridModule,
     CenterOfInterestModule,
   ],
-  providers: [{ provide: APP_GUARD, useClass: GqlAuthGuard }],
+  providers: [
+    { provide: APP_GUARD, useClass: GqlAuthGuard },
+    { provide: APP_INTERCEPTOR, useClass: SentryInterceptor },
+  ],
 })
 export class AppModule {}

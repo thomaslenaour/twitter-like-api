@@ -8,6 +8,16 @@ import { GetOrCreateOrDeleteTweetInteractionDto } from './dto/tweetInteraction.d
 export class TweetInteractionRepository {
   constructor(private prisma: PrismaService) {}
 
+  async getTweetInteractions(tweetId: string) {
+    try {
+      return await this.prisma.tweetInteraction.findMany({
+        where: { tweetId },
+      });
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async getUniqueTweetInteraction(
     data: GetOrCreateOrDeleteTweetInteractionDto,
   ) {

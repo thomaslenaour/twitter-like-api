@@ -1,6 +1,12 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 
-import { Token } from './models/token.model';
+import { Token, TokenWithUser } from './models/token.model';
 
 import { AuthService } from './auth.service';
 
@@ -9,13 +15,18 @@ import { SignupInput } from './dto/signup.input';
 
 import { Public } from './decorators/public.decorator';
 import { UserIp } from './decorators/ip.decorator';
+import { User } from 'src/business/user/models/user.model';
+import { UserService } from 'src/business/user/user.service';
 
-@Resolver(() => Token)
+@Resolver(() => TokenWithUser)
 export class AuthResolver {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
 
   @Public()
-  @Mutation(() => Token)
+  @Mutation(() => TokenWithUser)
   async signup(@Args('data') data: SignupInput, @UserIp() ip: string) {
     try {
       return await this.authService.createUser(data, ip);
@@ -25,7 +36,7 @@ export class AuthResolver {
   }
 
   @Public()
-  @Mutation(() => Token)
+  @Mutation(() => TokenWithUser)
   async login(@Args('data') data: LoginInput, @UserIp() ip: string) {
     try {
       return await this.authService.login(data, ip);
@@ -42,5 +53,10 @@ export class AuthResolver {
     } catch (err) {
       throw err;
     }
+  }
+
+  @ResolveField('user', () => User)
+  async user(@Parent() token: TokenWithUser) {
+    return await this.userService.getUser('id', token.userId);
   }
 }

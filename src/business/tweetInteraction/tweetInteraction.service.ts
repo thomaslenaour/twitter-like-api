@@ -8,6 +8,16 @@ import { TweetInteractionRepository } from './tweetInteraction.repository';
 export class TweetInteractionService {
   constructor(private tweetInteractionRepository: TweetInteractionRepository) {}
 
+  async getTweetInteractions(tweetId: string) {
+    try {
+      return await this.tweetInteractionRepository.getTweetInteractions(
+        tweetId,
+      );
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async getUniqueTweetInteraction(
     data: GetOrCreateOrDeleteTweetInteractionDto,
   ) {

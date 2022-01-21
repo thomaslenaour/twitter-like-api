@@ -25,6 +25,10 @@ export class UserService {
     return user;
   }
 
+  async searchUser(searchValue: string) {
+    return await this.userRepository.searchUser(searchValue);
+  }
+
   async createUser(data: CreateUserDto) {
     if (getAge(data.birthDate) < 15) {
       throw new Error('You must have 15 years to register.');
