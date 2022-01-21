@@ -32,7 +32,7 @@ model User {
   refreshTokens     RefreshToken[]
   followers         Follows[]          @relation("follower")
   following         Follows[]          @relation("following")
-  CenterOfInterests CenterOfInterest[]
+  centerOfInterests CenterOfInterest[]
 }
 
 model RefreshToken {
@@ -96,7 +96,7 @@ model CenterOfInterest {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String
+  name      String   @unique
   kind      String   @default("CenterOfInterest")
   users     User[]
 }

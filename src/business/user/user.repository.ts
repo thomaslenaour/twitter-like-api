@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { JwtDecodedUser } from 'src/technical/auth/types/jwt.interface';
 
 import { PrismaService } from 'src/technical/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -48,5 +49,51 @@ export class UserRepository {
       }
       throw err;
     }
+  }
+
+  async getCompatibleUsersList(user: JwtDecodedUser) {
+    const { centerOfInterests } = await this.prisma.user.findUnique({
+      where: {
+        id: user.userId,
+      },
+      select: {
+        centerOfInterests: true,
+      },
+    });
+
+    const centersOfInterestId = centerOfInterests.map(
+      (centerOfInterest) => centerOfInterest.id,
+    );
+
+    return this.prisma.user.findMany({
+      where: {
+        id: {
+          not: user.userId,
+        },
+        centerOfInterests: {
+          some: {
+            id: {
+              in: centersOfInterestId,
+            },
+          },
+        },
+      },
+      orderBy: {
+        centerOfInterests: {
+          _count: 'desc',
+        },
+      },
+    });
+  }
+
+  async getUserCentersOfInterest(userId: string) {
+    return await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        centerOfInterests: true,
+      },
+    });
   }
 }

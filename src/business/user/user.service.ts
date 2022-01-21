@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import bcrypt from 'bcrypt';
+import { JwtDecodedUser } from 'src/technical/auth/types/jwt.interface';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -36,5 +37,13 @@ export class UserService {
 
   async updateUser(data: UpdateUserDto) {
     return this.userRepository.updateUser(data);
+  }
+
+  async getCompatibleUsersList(user: JwtDecodedUser) {
+    return await this.userRepository.getCompatibleUsersList(user);
+  }
+
+  async getUserCentersOfInterest(userId: string) {
+    return await this.userRepository.getUserCentersOfInterest(userId);
   }
 }

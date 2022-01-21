@@ -63,7 +63,9 @@ type Mutation {
 }
 
 type Query {
+  getCenterOfInterest(centerOfInterestId: String!): CenterOfInterest!
   getCentersOfInterest: [CenterOfInterest!]!
+  getCompatibleUsersList: [User!]!
   getTweet(tweetId: String!): Tweet!
   getTweets: [Tweet!]!
   user(userId: String!): User!
@@ -141,6 +143,7 @@ type User {
   avatarUrl: String
   bannerUrl: String
   birthDate: DateTime!
+  centersOfInterest: [CenterOfInterest!]!
 
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!
