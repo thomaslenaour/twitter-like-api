@@ -14,6 +14,7 @@ import { PrismaModule } from './technical/prisma/prisma.module';
 import { FollowsModule } from './business/follows/follows.module';
 import { TweetInteractionModule } from './business/tweetInteraction/tweetInteraction.module';
 import { SendgridModule } from './technical/sendgrid/sendgrid.module';
+import { CenterOfInterestModule } from './business/centerOfInterest/centerOfInterest.module';
 import { SentryInterceptor } from './technical/sentry/sentry.interceptor';
 
 @Module({
@@ -39,6 +40,7 @@ import { SentryInterceptor } from './technical/sentry/sentry.interceptor';
     FollowsModule,
     TweetInteractionModule,
     SendgridModule,
+    CenterOfInterestModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: GqlAuthGuard },

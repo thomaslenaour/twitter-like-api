@@ -22,7 +22,7 @@
     "docker:db": "docker-compose -f docker-compose.yml up -d",
     "prisma:format": "npx prisma format",
     "prisma:generate": "npm run prisma:format && npx prisma generate",
-    "prisma:migrate:generate": "npx prisma migrate dev",
+    "prisma:migrate:dev": "npx prisma migrate dev",
     "prisma:migrate:deploy": "npx prisma migrate deploy",
     "prisma:migrate:reset": "npx prisma migrate reset",
     "db:seed": "npx prisma db seed"

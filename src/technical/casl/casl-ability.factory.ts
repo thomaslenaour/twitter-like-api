@@ -6,6 +6,7 @@ import {
 } from '@casl/ability';
 import { PrismaAbility, Subjects } from '@casl/prisma';
 import {
+  CenterOfInterest,
   Follows,
   RefreshToken,
   Tweet,
@@ -23,6 +24,7 @@ type PrismaSubjects = Subjects<{
   RefreshToken: RefreshToken;
   Follows: Follows;
   TweetInteraction: TweetInteraction;
+  CenterOfInterest: CenterOfInterest;
 }>;
 
 type AppSubjects = PrismaSubjects | 'all';

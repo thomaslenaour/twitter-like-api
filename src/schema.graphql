@@ -7,6 +7,18 @@ enum BTweetInteractionType {
   RETWEET
 }
 
+type CenterOfInterest {
+  """Identifies the date and time when the object was created."""
+  createdAt: DateTime!
+
+  """Identifies the ID of the object (always unique)."""
+  id: String!
+  name: String!
+
+  """Identifies the date and time when the object was last updated."""
+  updatedAt: DateTime!
+}
+
 input CreateTweetInput {
   authorId: String!
   content: String!
@@ -51,6 +63,9 @@ type Mutation {
 }
 
 type Query {
+  getCenterOfInterest(centerOfInterestId: String!): CenterOfInterest!
+  getCentersOfInterest: [CenterOfInterest!]!
+  getCompatibleUsersList: [User!]!
   getTweet(tweetId: String!): Tweet!
   getTweets(filter: String, skip: Int, take: Int): [Tweet!]!
   searchUser(searchValue: String!): [User!]!
@@ -145,6 +160,7 @@ type User {
   avatarUrl: String
   bannerUrl: String
   birthDate: DateTime!
+  centersOfInterest: [CenterOfInterest!]!
 
   """Identifies the date and time when the object was created."""
   createdAt: DateTime!

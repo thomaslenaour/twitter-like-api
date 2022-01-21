@@ -83,6 +83,23 @@ CREATE TABLE "TweetInteraction" (
     CONSTRAINT "TweetInteraction_pkey" PRIMARY KEY ("tweetId","userId","type")
 );
 
+-- CreateTable
+CREATE TABLE "CenterOfInterest" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "name" TEXT NOT NULL,
+    "kind" TEXT NOT NULL DEFAULT E'CenterOfInterest',
+
+    CONSTRAINT "CenterOfInterest_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_CenterOfInterestToUser" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_pseudo_key" ON "User"("pseudo");
 
@@ -91,6 +108,15 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "RefreshToken_jti_key" ON "RefreshToken"("jti");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CenterOfInterest_name_key" ON "CenterOfInterest"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_CenterOfInterestToUser_AB_unique" ON "_CenterOfInterestToUser"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_CenterOfInterestToUser_B_index" ON "_CenterOfInterestToUser"("B");
 
 -- AddForeignKey
 ALTER TABLE "RefreshToken" ADD CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -115,3 +141,9 @@ ALTER TABLE "TweetInteraction" ADD CONSTRAINT "TweetInteraction_tweetId_fkey" FO
 
 -- AddForeignKey
 ALTER TABLE "TweetInteraction" ADD CONSTRAINT "TweetInteraction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_CenterOfInterestToUser" ADD FOREIGN KEY ("A") REFERENCES "CenterOfInterest"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_CenterOfInterestToUser" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
