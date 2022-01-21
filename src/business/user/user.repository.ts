@@ -79,14 +79,9 @@ export class UserRepository {
   }
 
   async getCompatibleUsersList(user: JwtDecodedUser) {
-    const { centerOfInterests } = await this.prisma.user.findUnique({
-      where: {
-        id: user.userId,
-      },
-      select: {
-        centerOfInterests: true,
-      },
-    });
+    const { centerOfInterests } = await this.getUserCentersOfInterest(
+      user.userId,
+    );
 
     const centersOfInterestId = centerOfInterests.map(
       (centerOfInterest) => centerOfInterest.id,
