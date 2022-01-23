@@ -19,11 +19,6 @@ export class CreateTweetInput {
   @Field()
   content: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Field()
-  authorId: string;
-
   @IsNotEmpty()
   @IsEnum(BTweetType)
   @Field(() => BTweetType)

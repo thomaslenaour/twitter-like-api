@@ -45,9 +45,15 @@ export class TweetResolver {
   @UseGuards(GqlAuthGuard, PoliciesGuard)
   @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, 'Tweet'))
   @Mutation(() => Tweet)
-  async createTweet(@Args('data') data: CreateTweetInput) {
+  async createTweet(
+    @Args('data') data: CreateTweetInput,
+    @CurrentUser() user: JwtDecodedUser,
+  ) {
     try {
-      return await this.tweetService.createTweet(data);
+      return await this.tweetService.createTweet({
+        ...data,
+        authorId: user.userId,
+      });
     } catch (err) {
       throw err;
     }

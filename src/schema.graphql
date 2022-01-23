@@ -20,7 +20,6 @@ type CenterOfInterest {
 }
 
 input CreateTweetInput {
-  authorId: String!
   content: String!
   parentResponseTweetId: String
   parentTweetId: String
