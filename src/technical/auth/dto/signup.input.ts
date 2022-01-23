@@ -1,5 +1,11 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsDate, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsDate,
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 
 @InputType()
 export class SignupInput {
@@ -28,4 +34,9 @@ export class SignupInput {
   @IsNotEmpty()
   @Field()
   birthDate: Date;
+
+  @IsArray()
+  @IsString({ each: true })
+  @Field(() => [String])
+  centerOfInterests: string[];
 }

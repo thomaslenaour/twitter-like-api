@@ -57,7 +57,6 @@ export class UserResolver {
 
   @Query(() => [User])
   async getCompatibleUsersList(@CurrentUser() user: JwtDecodedUser) {
-    console.log(await this.userService.getCompatibleUsersList(user));
     return await this.userService.getCompatibleUsersList(user);
   }
 

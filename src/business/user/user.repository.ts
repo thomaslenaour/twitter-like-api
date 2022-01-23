@@ -54,8 +54,16 @@ export class UserRepository {
   }
 
   async createUser(data: CreateUserDto) {
+    const { centerOfInterests, ...userInfo } = data;
+    const formattedCenterOfInterests = centerOfInterests.map((id) => ({ id }));
+
     try {
-      return await this.prisma.user.create({ data });
+      return await this.prisma.user.create({
+        data: {
+          ...userInfo,
+          centerOfInterests: { connect: formattedCenterOfInterests },
+        },
+      });
     } catch (err) {
       if (
         err instanceof PrismaClientKnownRequestError &&

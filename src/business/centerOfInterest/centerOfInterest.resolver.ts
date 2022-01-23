@@ -1,6 +1,5 @@
-import { Args, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { JwtDecodedUser } from 'src/technical/auth/types/jwt.interface';
-import { CurrentUser } from '../user/user.decorator';
+import { Args, Query, Resolver } from '@nestjs/graphql';
+
 import { CenterOfInterestService } from './centerOfInterest.service';
 
 import { CenterOfInterest } from './model/centerOfInterest.model';
