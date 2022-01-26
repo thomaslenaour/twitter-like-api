@@ -13,6 +13,7 @@ import { UserRepository } from '../../business/user/user.repository';
 
 import { JwtCreateToken } from './types/jwt.interface';
 
+import { UserService } from 'src/business/user/user.service';
 import { SendgridService } from '../sendgrid/sendgrid.service';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
@@ -21,6 +22,7 @@ import { LoginDto } from './dto/login.dto';
 export class AuthService {
   constructor(
     private userRepository: UserRepository,
+    private userService: UserService,
     private passwordService: PasswordService,
     private tokenService: TokenService,
     private sendgridService: SendgridService,
@@ -35,7 +37,7 @@ export class AuthService {
     );
 
     try {
-      const createdUser = await this.userRepository.createUser({
+      const createdUser = await this.userService.createUser({
         ...data,
         email: data.email.toLowerCase(),
         password: hashedPassword,
