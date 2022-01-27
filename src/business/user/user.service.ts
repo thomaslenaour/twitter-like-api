@@ -30,12 +30,9 @@ export class UserService {
   }
 
   async createUser(data: CreateUserDto) {
-    console.log('getAge(data.birthDate)', getAge(data.birthDate));
     if (getAge(data.birthDate) < 15) {
       throw new Error('You must have 15 years to register.');
     }
-
-    data.password = await bcrypt.hash(data.password, 10);
 
     return this.userRepository.createUser(data);
   }
